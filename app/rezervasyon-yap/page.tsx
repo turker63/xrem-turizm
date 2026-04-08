@@ -81,7 +81,9 @@ export default function RezervasyonYapPage() {
                 </div>
               </motion.div>
             ) : loading ? (
-              <div className="h-96 flex flex-col items-center justify-center gap-6 text-center">
+              <div className="h-96 flex flex-col items-center j
+              
+              stify-center gap-6 text-center">
                 <div className="relative">
                     <RefreshCcw className="text-gold animate-spin" size={48} />
                     <div className="absolute inset-0 blur-xl bg-gold/20 animate-pulse" />
