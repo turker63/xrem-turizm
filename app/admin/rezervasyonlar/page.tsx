@@ -16,17 +16,17 @@ export default function AdminReservations() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRes, setSelectedRes] = useState<any | null>(null);
 
-  // 🔄 VERİLERİ ÇEK
+  
   const fetchData = async () => {
     setLoading(true);
     
-    // A. Rezervasyonları Getir
+    
     const { data: resData } = await supabase
       .from("reservations")
       .select("*")
       .order("transfer_date", { ascending: false });
 
-    // B. Şoförleri Getir
+    
     const { data: driversData } = await supabase
       .from("drivers")
       .select("*")
@@ -40,7 +40,7 @@ export default function AdminReservations() {
 
   useEffect(() => { fetchData(); }, []);
 
-  // 🏎️ ŞOFÖR ATAMA FONKSİYONU
+  
   const handleAssignDriver = async (resId: string, driverName: string) => {
     const { error } = await supabase
       .from("reservations")

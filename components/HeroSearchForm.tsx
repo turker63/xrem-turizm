@@ -220,7 +220,7 @@ export default function HeroSearchForm({ defaultDropoff = "" }: { defaultDropoff
   const currentReturnDropoffList = returnDropoffValue.length > 0 ? filteredReturnDropoff : allLocations;
 
   return (
-    <div className="w-full max-w-5xl mx-auto relative z-[100] drop-shadow-2xl" ref={formRef}>
+    <div className="w-full max-w-5xl mx-auto relative z-[100] drop-shadow-2xl mt-16" ref={formRef}>
       <div className="flex gap-1 mb-0 ml-4 relative z-20">
         <button onClick={() => setIsRoundTrip(false)} className={`px-6 py-3 rounded-t-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${!isRoundTrip ? 'bg-white text-black shadow-[0_-5px_15px_rgba(0,0,0,0.05)]' : 'bg-white/80 text-gray-500 hover:bg-white'}`}>
           <ArrowRight size={14} className={!isRoundTrip ? 'text-gold' : 'text-gray-400'} /> {t.oneWay}

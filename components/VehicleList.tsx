@@ -266,7 +266,7 @@ const VehicleList = forwardRef((props: any, ref) => {
                   {v.contact_for_price ? (
                     <button onClick={(e) => executeAction(e, () => window.open(`https://wa.me/905322855572?text=Merhaba, ${v.name} aracı için bilgi ve fiyat almak istiyorum.`, "_blank"))} className="w-full bg-[#25D366] hover:bg-green-600 text-white font-black px-6 py-4 rounded-xl uppercase text-[10px] md:text-[11px] tracking-widest transition-all shadow-md flex justify-center items-center gap-2">FİYAT AL!</button>
                   ) : (
-                    <div onClick={(e) => executeAction(e, () => router.push("/rezervasyon"))} className="flex items-center justify-between cursor-pointer">
+                    <div onClick={(e) => executeAction(e, () => router.push("/rezervasyon-yap"))} className="flex items-center justify-between cursor-pointer">
                       <div className="text-left"><span className="text-[10px] text-luxury-gray/60 block font-bold uppercase">Başlayan Fiyatlar</span><span className="text-2xl font-black text-luxury-dark">{minPrice ? `€${minPrice}` : "---"}</span></div>
                       <div className="w-12 h-12 bg-cream-dark text-gold rounded-full flex items-center justify-center group-hover:bg-gold group-hover:text-white transition-all duration-300 shadow-sm pointer-events-none"><ChevronRight size={24} /></div>
                     </div>
