@@ -4,9 +4,11 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useLanguage } from "@/context/LanguageContext";
 import { Anchor, Users, Navigation, Star, ShieldCheck, Waves, CheckCircle2, ArrowRight, Utensils, Compass, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function YachtRentalPage() {
+  const { lang } = useLanguage();
   const [currentImg, setCurrentImg] = useState(0);
 
   const yachtImages = [
@@ -16,17 +18,49 @@ export default function YachtRentalPage() {
     "/xrem-aqua/xrem-aqua-6.jpeg"
   ];
 
-  const nextImg = () => setCurrentImg((prev) => (prev + 1) % yachtImages.length);
-  const prevImg = () => setCurrentImg((prev) => (prev === 0 ? yachtImages.length - 1 : prev - 1));
+  const tStrings = {
+    badge: "XREM PREMIUM YACHTING",
+    title1: lang === 'en' ? "VIP YACHT" : "VIP YAT",
+    title2: lang === 'en' ? "CHARTER" : "KİRALAMA",
+    heroDesc: lang === 'en' 
+      ? "Experience the comfort of a five-star hotel on the sea with our luxury yacht specially allocated for you in the unique bays of Antalya." 
+      : "Antalya'nın eşsiz koylarında, tamamen size özel tahsis edilmiş lüks yatımızla deniz üzerindeki beş yıldızlı otel konforunu yaşayın.",
+    assuranceLabel: lang === 'en' ? "ASSURANCE" : "GÜVENCE",
+    assuranceValue: lang === 'en' ? "FULLY INSURED SECURITY" : "TAM SİGORTALI GÜVENLİK",
+    sectionTitle1: lang === 'en' ? "A PRIVILEGED DAY" : "AYRICALIKLI BİR GÜN",
+    sectionTitle2: lang === 'en' ? "YOUR PALACE" : "DENİZ ÜZERİNDEKİ",
+    sectionTitle3: lang === 'en' ? "ON THE SEA" : "SARAYINIZ",
+    sectionDesc: lang === 'en'
+      ? "Spend an unforgettable day in the most pristine bays of the Mediterranean, far from the crowds, with our luxury yacht allocated exclusively for you and your loved ones. Every detail has been thought out for you in this unique experience, where you are picked up from your hotel by our VIP vehicles and dropped back at the end of the tour."
+      : "Sadece size ve sevdiklerinize özel tahsis edilen lüks yatımızla, kalabalıktan uzak, Akdeniz'in en bakir koylarında unutulmaz bir gün geçirin. Otelinizden VIP araçlarımızla alınıp, tur bitiminde tekrar otelinize bırakıldığınız bu eşsiz deneyimde her detay sizin için düşünüldü.",
+    includedTitle: lang === 'en' ? "SERVICES INCLUDED IN THE PRICE" : "ÜCRETE DAHİL OLAN HİZMETLER",
+    bookBtn: lang === 'en' ? "BOOK NOW" : "HEMEN REZERVASYON YAPIN",
+    ctaTitle1: lang === 'en' ? "FOR SPECIAL ROUTES" : "ÖZEL ROTALAR VE",
+    ctaTitle2: lang === 'en' ? "AND REQUESTS" : "TALEPLERİNİZ İÇİN",
+    ctaDesc: lang === 'en'
+      ? "We can organize our yacht as you wish for marriage proposals, birthday parties, special celebrations, or sunset tours. Contact our team for special menu and concept requests."
+      : "Evlilik teklifi, doğum günü partisi, özel kutlamalar veya gün batımı turları için yatımızı dilediğiniz gibi organize edebiliriz. Özel menü ve konsept istekleriniz için ekibimizle iletişime geçin.",
+    planBtn: lang === 'en' ? "PLAN SPECIAL TOUR" : "ÖZEL TUR PLANLA",
+    waMsg: lang === 'en' 
+      ? "Hello, I would like to get information and a quote about your VIP Yacht Charter service." 
+      : "Merhaba, VIP Yat Kiralama hizmetiniz hakkında bilgi ve fiyat almak istiyorum."
+  };
 
   const features = [
-    { icon: <Users size={24} />, title: "KAPASİTE", value: "1-12 KİŞİ" },
-    { icon: <Navigation size={24} />, title: "UZUNLUK", value: "24 METRE" },
-    { icon: <Star size={24} />, title: "KABİN", value: "3 MASTER KABİN" },
-    { icon: <Utensils size={24} />, title: "HİZMET", value: "ÖZEL AŞÇI" },
+    { icon: <Users size={24} />, title: lang === 'en' ? "CAPACITY" : "KAPASİTE", value: lang === 'en' ? "1-12 PEOPLE" : "1-12 KİŞİ" },
+    { icon: <Navigation size={24} />, title: lang === 'en' ? "LENGTH" : "UZUNLUK", value: lang === 'en' ? "24 METERS" : "24 METRE" },
+    { icon: <Star size={24} />, title: lang === 'en' ? "CABIN" : "KABİN", value: lang === 'en' ? "3 MASTER CABINS" : "3 MASTER KABİN" },
+    { icon: <Utensils size={24} />, title: lang === 'en' ? "SERVICE" : "HİZMET", value: lang === 'en' ? "PRIVATE CHEF" : "ÖZEL AŞÇI" },
   ];
 
-  const includes = [
+  const includes = lang === 'en' ? [
+    "Round-trip transfer from your hotel by VIP vehicle",
+    "Rich menu prepared by a Private Chef",
+    "Unlimited local soft drinks and snacks",
+    "Professional Captain and Crew service",
+    "Snorkel, fins, and various sea toys",
+    "Fuel, port taxes, and insurance"
+  ] : [
     "VIP Araç ile Otelinizden Çift Yönlü Transfer",
     "Özel Aşçı Tarafından Hazırlanan Zengin Menü",
     "Limitsiz Yerli Soft İçecekler ve Atıştırmalıklar",
@@ -35,8 +69,11 @@ export default function YachtRentalPage() {
     "Yakıt, Liman Vergileri ve Sigorta"
   ];
 
+  const nextImg = () => setCurrentImg((prev) => (prev + 1) % yachtImages.length);
+  const prevImg = () => setCurrentImg((prev) => (prev === 0 ? yachtImages.length - 1 : prev - 1));
+
   const handleWhatsApp = () => {
-    window.open("https://wa.me/905322855572?text=Merhaba, VIP Yat Kiralama hizmetiniz hakkında bilgi ve fiyat almak istiyorum.", "_blank");
+    window.open(`https://wa.me/905322855572?text=${encodeURIComponent(tStrings.waMsg)}`, "_blank");
   };
 
   return (
@@ -47,7 +84,7 @@ export default function YachtRentalPage() {
         <div className="absolute inset-0 z-0">
           <img 
             src="/xrem-aqua/xrem-aqua-2.jpeg" 
-            alt="VIP Yat Kiralama" 
+            alt="VIP Yacht Rental" 
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-cream" />
@@ -61,14 +98,14 @@ export default function YachtRentalPage() {
           >
             <div className="flex items-center justify-center gap-3 mb-6">
               <Anchor size={20} className="text-gold" />
-              <span className="text-[11px] font-black text-white tracking-[0.5em] uppercase">XREM PREMIUM YACHTING</span>
+              <span className="text-[11px] font-black text-white tracking-[0.5em] uppercase">{tStrings.badge}</span>
               <Anchor size={20} className="text-gold" />
             </div>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white uppercase tracking-tighter italic leading-none mb-6 drop-shadow-2xl">
-              VIP YAT <span className="text-gold">KİRALAMA</span>
+              {tStrings.title1} <span className="text-gold">{tStrings.title2}</span>
             </h1>
             <p className="text-sm md:text-lg text-gray-200 font-medium max-w-2xl mx-auto uppercase tracking-widest leading-relaxed">
-              Antalya'nın eşsiz koylarında, tamamen size özel tahsis edilmiş lüks yatımızla deniz üzerindeki beş yıldızlı otel konforunu yaşayın.
+              {tStrings.heroDesc}
             </p>
           </motion.div>
         </div>
@@ -119,7 +156,7 @@ export default function YachtRentalPage() {
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -20 }}
                       transition={{ duration: 0.4, ease: "easeInOut" }}
-                      alt="Yat Detay" 
+                      alt="Yacht Details" 
                       className="absolute inset-0 w-full h-full object-cover" 
                     />
                   </AnimatePresence>
@@ -157,8 +194,8 @@ export default function YachtRentalPage() {
                       <ShieldCheck size={24} />
                     </div>
                     <div>
-                      <span className="block text-[10px] font-black text-gray-400 uppercase tracking-widest">GÜVENCE</span>
-                      <span className="block text-sm font-black text-luxury-dark uppercase tracking-tight">TAM SİGORTALI GÜVENLİK</span>
+                      <span className="block text-[10px] font-black text-gray-400 uppercase tracking-widest">{tStrings.assuranceLabel}</span>
+                      <span className="block text-sm font-black text-luxury-dark uppercase tracking-tight">{tStrings.assuranceValue}</span>
                     </div>
                   </div>
                 </div>
@@ -172,18 +209,18 @@ export default function YachtRentalPage() {
               className="lg:w-1/2 space-y-8"
             >
               <div>
-                <span className="text-[10px] font-black text-gold tracking-[0.4em] uppercase mb-4 block border-l-4 border-gold pl-4">AYRICALIKLI BİR GÜN</span>
+                <span className="text-[10px] font-black text-gold tracking-[0.4em] uppercase mb-4 block border-l-4 border-gold pl-4">{tStrings.sectionTitle1}</span>
                 <h2 className="text-3xl md:text-5xl font-black text-luxury-dark uppercase tracking-tighter italic leading-none mb-6">
-                  DENİZ ÜZERİNDEKİ <br /> <span className="text-gold">SARAYINIZ</span>
+                  {tStrings.sectionTitle2} <br /> <span className="text-gold">{tStrings.sectionTitle3}</span>
                 </h2>
                 <p className="text-sm text-luxury-gray font-medium leading-relaxed uppercase tracking-wider">
-                  Sadece size ve sevdiklerinize özel tahsis edilen lüks yatımızla, kalabalıktan uzak, Akdeniz'in en bakir koylarında unutulmaz bir gün geçirin. Otelinizden VIP araçlarımızla alınıp, tur bitiminde tekrar otelinize bırakıldığınız bu eşsiz deneyimde her detay sizin için düşünüldü.
+                  {tStrings.sectionDesc}
                 </p>
               </div>
 
               <div className="space-y-4 pt-4 border-t border-cream-dark">
                 <h3 className="text-[11px] font-black text-luxury-dark uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
-                  <Star size={16} className="text-gold fill-gold" /> ÜCRETE DAHİL OLAN HİZMETLER
+                  <Star size={16} className="text-gold fill-gold" /> {tStrings.includedTitle}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {includes.map((item, idx) => (
@@ -201,7 +238,7 @@ export default function YachtRentalPage() {
                   className="bg-luxury-dark hover:bg-gold text-white px-10 py-5 rounded-2xl font-black uppercase text-[11px] tracking-[0.2em] transition-all shadow-xl active:scale-95 flex items-center gap-3 group"
                 >
                   <Compass size={20} className="group-hover:animate-spin-slow" />
-                  HEMEN REZERVASYON YAPIN <ArrowRight size={16} />
+                  {tStrings.bookBtn} <ArrowRight size={16} />
                 </button>
               </div>
             </motion.div>
@@ -214,16 +251,16 @@ export default function YachtRentalPage() {
         <div className="max-w-5xl mx-auto px-4 relative z-10 text-center">
           <Waves size={48} className="text-gold mx-auto mb-6 opacity-50" />
           <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter italic mb-6">
-            ÖZEL ROTALAR VE <span className="text-gold">TALEPLERİNİZ İÇİn</span>
+            {tStrings.ctaTitle1} <span className="text-gold">{tStrings.ctaTitle2}</span>
           </h2>
           <p className="text-sm text-gray-400 font-medium max-w-2xl mx-auto uppercase tracking-widest leading-relaxed mb-10">
-            Evlilik teklifi, doğum günü partisi, özel kutlamalar veya gün batımı turları için yatımızı dilediğiniz gibi organize edebiliriz. Özel menü ve konsept istekleriniz için ekibimizle iletişime geçin.
+            {tStrings.ctaDesc}
           </p>
           <button 
             onClick={handleWhatsApp}
             className="bg-gold hover:bg-white text-luxury-dark px-12 py-5 rounded-full font-black uppercase text-[11px] tracking-[0.2em] transition-all shadow-[0_0_40px_rgba(212,175,55,0.3)] hover:shadow-[0_0_60px_rgba(255,255,255,0.5)] active:scale-95 inline-flex items-center gap-3"
           >
-            ÖZEL TUR PLANLA <ArrowRight size={16} />
+            {tStrings.planBtn} <ArrowRight size={16} />
           </button>
         </div>
       </section>

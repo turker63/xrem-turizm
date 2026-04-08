@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const translations = {
   tr: {
@@ -194,9 +194,31 @@ const translations = {
 const LanguageContext = createContext<any>(null);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
+  // İlk açılışta TR başlasın, useEffect ile hemen gerçek dili ayarlayacağız
   const [lang, setLang] = useState('tr');
-  const t = translations[lang as keyof typeof translations];
-  const toggleLanguage = () => setLang((prev) => (prev === 'tr' ? 'en' : 'tr'));
+
+  useEffect(() => {
+    // 1. Kullanıcının daha önceki manuel seçimini kontrol et
+    const savedLang = localStorage.getItem('preferredLanguage');
+    
+    if (savedLang && (savedLang === 'tr' || savedLang === 'en')) {
+      setLang(savedLang);
+    } else {
+      // 2. Eğer ilk kez geliyorsa tarayıcı diline bak
+      const browserLang = navigator.language.split('-')[0]; // "en-US" -> "en"
+      const defaultLang = browserLang === 'tr' ? 'tr' : 'en';
+      setLang(defaultLang);
+      localStorage.setItem('preferredLanguage', defaultLang);
+    }
+  }, []);
+
+  const t = translations[lang as keyof typeof translations] || translations.en;
+
+  const toggleLanguage = () => {
+    const newLang = lang === 'tr' ? 'en' : 'tr';
+    setLang(newLang);
+    localStorage.setItem('preferredLanguage', newLang);
+  };
 
   return (
     <LanguageContext.Provider value={{ t, lang, toggleLanguage }}>

@@ -5,10 +5,12 @@ import { useState, useRef, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import { useLanguage } from "@/context/LanguageContext";
 import { Clock, CheckCircle2, Send, CalendarDays, Users, Timer, ChevronRight, Plus, Minus, Briefcase, Star, Map } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 export default function SoforluAracKiralamaPage() {
+  const { lang } = useLanguage();
   const today = new Date().toISOString().split('T')[0];
 
   const [formData, setFormData] = useState({
@@ -28,12 +30,41 @@ export default function SoforluAracKiralamaPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
 
+  const tStrings = {
+    badge: lang === 'en' ? "VIP Solutions" : "VIP Çözümler",
+    title1: lang === 'en' ? "ANTALYA CHAUFFEURED" : "ANTALYA ŞOFÖRLÜ",
+    title2: lang === 'en' ? "CAR RENTAL" : "ARAÇ KİRALAMA",
+    heading: lang === 'en' ? "Service Details" : "Hizmet Detayları",
+    para1: lang === 'en'
+      ? "Are you looking for a comfortable and enjoyable tour or meeting transportation? With our specially planned VIP vehicles, we make it as easy as possible for you to get from one location to another, providing a comfortable environment for crowded groups of friends or a pleasant Antalya city tour with your nuclear family. With in-car folding tables and television connection, we provide 24/7 service with our Antalya chauffeured car rental service."
+      : "Konforlu ve keyifli bir tur, toplantı ulaşımı mı arıyorsunuz? Sizler için özel olarak planlanmış VIP araçlarımız ile ister kalabalık arkadaş gruplarınız için veya çekirdek aileniz ile yapacağınız keyifli Antalya şehir turu veya toplantı salonlarına yetişebilmeniz için sadece size özel VIP araçlarımız ile istediğiniz noktadan bir diğer konuma gitmenizi olabildiğince kolaylaştırıyor ve konforlu bir ortam sunuyoruz.",
+    para2: lang === 'en'
+      ? "We provide high-end services for special days, including wedding organizations, bridal cars, and transporting guests to event areas. Whether it's an entertainment event, wedding, or concert, we handle the logistics of musicians and their equipment. With different vehicle options having high or low passenger capacities, we provide healthy, safe, and economic transportation services tailored to different customer demands."
+      : "Özel günler için sunmuş olduğumuz Antalya şoförlü araç kiralama, Antalya transfer, Antalya Havalimanı ulaşım, servis hizmetimiz mevcuttur. Mercedes araç filomuz ile Antalya ve çevresini iyi bilen, tam donanımlı personellerimiz bulunmaktadır. Düğün organizasyonları kapsamında, Antalya gelin arabası ve özel misafirlerinizin ya da davetlilerinizin düğün alanına ulaştırılması hizmetimiz hem sizler için kolay hem de davetliler için konforlu bir tercih olacaktır.",
+    para3: lang === 'en'
+      ? "Our expert and experienced staff work to best meet your needs for airport or hotel transfers. Our contact number is active 24/7 to provide professional solutions for your Antalya Chauffeured Car Rental needs. You can also send your requests via email. For reservation cancellations or changes, you can contact us quickly. As Antalya airport transfer specialists, we serve Antalya and its surrounding provinces."
+      : "7 gün 24 saat sizler için Antalya Şoförlü Araç Kiralama sunduğumuz VIP araçlar ile özel transfer hizmetlerimiz, havalimanı veya otel transferleriniz için profesyonel çözümler üretiyoruz. Uzman ve deneyimli kadromuz, sizlerin ihtiyacını en iyi şekilde karşılamak için çalışmaktadır. Ulaşabileceğiz iletişim numaramız 7/24 aktif bir şekilde hizmet vermektedir.",
+    formTitle: lang === 'en' ? "CONTACT US!" : "BİZİMLE İLETİŞİME GEÇİN!",
+    formDesc: lang === 'en' ? "To get a reservation and detailed information, please fill out the form below! We will call you as soon as possible." : "Rezervasyon ve detaylı bilgi almak için Lütfen aşağıdaki formu doldurarak bizimle iletişime geçin!",
+    phName: lang === 'en' ? "Your Full Name" : "Adınız Soyadınız",
+    phPhone: lang === 'en' ? "Your Phone Number" : "Telefon Numaranız",
+    phEmail: lang === 'en' ? "Your Email Address" : "E-posta Adresiniz",
+    paxLabel: lang === 'en' ? "PASSENGER COUNT" : "YOLCU SAYISI",
+    paxValue: lang === 'en' ? `${adults} Adults, ${children} Children` : `${adults} Yetişkin, ${children} Çocuk`,
+    adult: lang === 'en' ? "Adult" : "Yetişkin",
+    child: lang === 'en' ? "Child (2-12 years)" : "Çocuk (2-12 yaş)",
+    details: lang === 'en' ? "Route and Special Requests..." : "Güzergah ve Özel Talepleriniz...",
+    btnSend: lang === 'en' ? "SEND" : "GÖNDER",
+    btnSending: lang === 'en' ? "SENDING..." : "GÖNDERİLİYOR...",
+    successMsg: lang === 'en' ? "Your request has been sent successfully. Thank you for contacting us. We will call you shortly." : "Talebiniz başarıyla Gönderildi. Bizimle iletişime geçtiğiniz için Teşekkür ederiz. Mümkün olan en kısa sürede sizi arayacağız."
+  };
+
   const highlights = [
-    { title: "Lüks Filo", desc: "Mercedes-Benz araçlar", icon: Star },
-    { title: "7/24 Hizmet", desc: "Kesintisiz aktif lojistik", icon: Clock },
-    { title: "Uzman Şoförler", desc: "Deneyimli ve belgeli", icon: CheckCircle2 },
-    { title: "Esnek Rotalar", desc: "Size özel planlama", icon: Map },
-    { title: "Tam Donanım", desc: "Masa, TV, internet", icon: Briefcase },
+    { title: lang === 'en' ? "Luxury Fleet" : "Lüks Filo", desc: lang === 'en' ? "Mercedes-Benz vehicles" : "Mercedes-Benz araçlar", icon: Star },
+    { title: lang === 'en' ? "24/7 Service" : "7/24 Hizmet", desc: lang === 'en' ? "Non-stop active logistics" : "Kesintisiz aktif lojistik", icon: Clock },
+    { title: lang === 'en' ? "Expert Drivers" : "Uzman Şoförler", desc: lang === 'en' ? "Experienced & certified" : "Deneyimli ve belgeli", icon: CheckCircle2 },
+    { title: lang === 'en' ? "Flexible Routes" : "Esnek Rotalar", desc: lang === 'en' ? "Tailored planning" : "Size özel planlama", icon: Map },
+    { title: lang === 'en' ? "Fully Equipped" : "Tam Donanım", desc: lang === 'en' ? "Desk, TV, Internet" : "Masa, TV, internet", icon: Briefcase },
   ];
 
   useEffect(() => {
@@ -51,7 +82,7 @@ export default function SoforluAracKiralamaPage() {
     setIsSubmitting(true);
     setSubmitStatus("idle");
 
-    const passengerCountText = `${adults} Yetişkin, ${children} Çocuk`;
+    const passengerCountText = `${adults} ${lang === 'en' ? 'Adult' : 'Yetişkin'}, ${children} ${lang === 'en' ? 'Child' : 'Çocuk'}`;
 
     try {
       const { error } = await supabase
@@ -86,7 +117,6 @@ export default function SoforluAracKiralamaPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    
     if (name === "phone") {
       const numericValue = value.replace(/\D/g, "").slice(0, 12);
       setFormData({ ...formData, [name]: numericValue });
@@ -94,8 +124,6 @@ export default function SoforluAracKiralamaPage() {
       setFormData({ ...formData, [name]: value });
     }
   };
-
-  const totalPassengers = adults + children;
 
   return (
     <main className="min-h-screen bg-cream flex flex-col relative overflow-x-hidden">
@@ -111,18 +139,14 @@ export default function SoforluAracKiralamaPage() {
       </div>
 
       <section className="relative pt-44 pb-16 overflow-hidden z-10">
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center"
-          >
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="w-16 h-16 bg-white/60 border border-white rounded-[2rem] flex items-center justify-center text-gold mx-auto mb-6 shadow-lg">
               <Star size={32} />
             </div>
-            <span className="text-[10px] font-black text-gold tracking-[0.5em] uppercase mb-4 block italic">VIP Solutions</span>
+            <span className="text-[10px] font-black text-gold tracking-[0.5em] uppercase mb-4 block italic">{tStrings.badge}</span>
             <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-[#1a1a1a] italic leading-tight mb-6">
-              ANTALYA ŞOFÖRLÜ <br /> <span className="text-gold">ARAÇ KİRALAMA</span>
+              {tStrings.title1} <br /> <span className="text-gold">{tStrings.title2}</span>
             </h1>
             <div className="h-1.5 w-24 bg-gold mx-auto rounded-full shadow-lg" />
           </motion.div>
@@ -133,24 +157,13 @@ export default function SoforluAracKiralamaPage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             
-            <motion.div 
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="lg:col-span-7 xl:col-span-8 space-y-12"
-            >
+            <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-7 xl:col-span-8 space-y-12">
               <div className="bg-white/40 backdrop-blur-md border border-white p-8 md:p-14 rounded-[3.5rem] shadow-xl">
-                <h2 className="text-2xl font-black italic uppercase text-[#1a1a1a] mb-8 tracking-tighter">Hizmet Detayları</h2>
-                
+                <h2 className="text-2xl font-black italic uppercase text-[#1a1a1a] mb-8 tracking-tighter">{tStrings.heading}</h2>
                 <div className="space-y-6 text-[#1a1a1a] font-bold text-sm md:text-base leading-relaxed opacity-80 text-justify">
-                  <p>
-                    Konforlu ve keyifli bir tur, toplantı ulaşımı mı arıyorsunuz? Sizler için özel olarak planlanmış VIP araçlarımız ile ister kalabalık arkadaş gruplarınız için veya çekirdek aileniz ile yapacağınız keyifli Antalya şehir turu veya toplantı salonlarına yetişebilmeniz için sadece size özel VIP araçlarımız ile istediğiniz noktadan bir diğer konuma gitmenizi olabildiğince kolaylaştırıyor ve konforlu bir ortam sunuyoruz. Araç içi açılabilen masalar, televizyon bağlantısı Antalya şoförlü araç kiralama hizmetimiz ile sizlere 7/24 hizmet sunmaktayız. Araç filomuzdan dilediğiniz aracı seçerek, konserlere, etkinliklere, otelinize, Antalya şehirlerarası ulaşım hizmetimiz ile VIP araçlar ile özel transfer hizmetleri doğrultusunda gidebilirsiniz.
-                  </p>
-                  <p>
-                    Özel günler için sunmuş olduğumuz Antalya şoförlü araç kiralama, Antalya transfer, Antalya Havalimanı ulaşım, servis hizmetimiz mevcuttur. Mercedes araç filomuz ile Antalya ve çevresini iyi bilen, tam donanımlı, müşteriye karşı nasıl davranılması gerektiğini bilen, hangi tip organizasyonlarda aracın ne tür ihtiyaçlarının karşılanması gerektiği bilgisine sahibiz. Tam donanımlı ve bilgili “şoför” personellerimiz bulunmaktadır. Düğün organizasyonları kapsamında, Antalya gelin arabası ve özel misafirlerinizin ya da davetlilerinizin düğün alanına ulaştırılması ya da düğün alanından evlerine kadar ulaştırılması hizmetimiz hem sizler için kolay misafirler ve davetliler için konforlu bir tercih olacaktır. Eğlence organizasyonu, düğün ya da konser gibi eğlence etkinliklerinde müzisyenlerin, müzisyen grup elemanlarının, müzisyen ekibinin malzemeleri ve özel eşyaları ile birlikte organizasyon alanına ulaştırılmaları, bu kategoride sunduğumuz hizmetlerimiz arasındadır. Farklı müşteri talepleri için farklı organizasyonlar doğrultusunda çok kişilik ya da az kişilik kapasitelere sahip farklı model araç seçeneklerimiz ile konforlu, sağlıklı, güvenli ve ekonomik bir ulaşım hizmeti vermekteyiz.
-                  </p>
-                  <p>
-                    7 gün 24 saat sizler için Antalya Şoförlü Araç Kiralama sunduğumuz VIP araçlar ile özel transfer hizmetlerimiz, havalimanı veya otel transferleriniz için profesyonel çözümler üretiyoruz. Uzman ve deneyimli kadromuz, sizlerin ihtiyacını en iyi şekilde karşılamak için çalışmaktadır. Ulaşabileceğiz iletişim numaramız 7/24 aktif bir şekilde hizmet vermektedir. Dilerseniz mail olaraktan tarafımıza taleplerinizi iletebilirsiniz. Rezervasyon iptal veya değişikliği için hızlıca iletişime geçebilirsiniz. Antalya havalimanı transfer firması olarak sizlere Antalya havalimanı ve Antalya çevre illerine hizmet sunuyoruz.
-                  </p>
+                  <p>{tStrings.para1}</p>
+                  <p>{tStrings.para2}</p>
+                  <p>{tStrings.para3}</p>
                 </div>
               </div>
 
@@ -165,135 +178,63 @@ export default function SoforluAracKiralamaPage() {
                   </div>
                 ))}
               </div>
-
             </motion.div>
 
-            <motion.aside 
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="lg:col-span-5 xl:col-span-4 space-y-8 lg:sticky lg:top-32"
-            >
+            <motion.aside initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-5 xl:col-span-4 space-y-8 lg:sticky lg:top-32">
               <div className="bg-white/80 backdrop-blur-xl border border-white p-8 md:p-10 rounded-[3rem] shadow-2xl relative overflow-hidden">
-                <h4 className="text-[#1a1a1a] font-black text-2xl uppercase italic tracking-tighter mb-2 text-center">BİZİMLE İLETİŞİME GEÇİN!</h4>
+                <h4 className="text-[#1a1a1a] font-black text-2xl uppercase italic tracking-tighter mb-2 text-center">{tStrings.formTitle}</h4>
                 <p className="text-gray-500 text-[9px] font-bold uppercase tracking-widest mb-8 leading-relaxed text-center opacity-80">
-                  Rezervasyon ve detaylı bilgi almak için Lütfen aşağıdaki formu doldurarak bizimle iletişime geçin! En kısa sürede sizi arayalım.
+                  {tStrings.formDesc}
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
-                  <input 
-                    type="text" 
-                    name="name"
-                    required
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Adınız Soyadınız" 
-                    className="w-full bg-cream border border-cream focus:border-gold outline-none px-5 py-4.5 rounded-2xl text-xs font-black text-[#1a1a1a] placeholder-gray-400 transition-all shadow-inner"
-                  />
-                  <input 
-                    type="text" 
-                    name="phone"
-                    required
-                    value={formData.phone}
-                    onChange={handleChange}
-                    placeholder="Telefon Numaranız " 
-                    className="w-full bg-cream border border-cream focus:border-gold outline-none px-5 py-4.5 rounded-2xl text-xs font-black text-[#1a1a1a] placeholder-gray-400 transition-all shadow-inner"
-                  />
-                  <input 
-                    type="email" 
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="E-posta Adresiniz" 
-                    className="w-full bg-cream border border-cream focus:border-gold outline-none px-5 py-4.5 rounded-2xl text-xs font-black text-[#1a1a1a] placeholder-gray-400 transition-all shadow-inner"
-                  />
+                  <input type="text" name="name" required value={formData.name} onChange={handleChange} placeholder={tStrings.phName} className="w-full bg-cream border border-cream focus:border-gold outline-none px-5 py-4.5 rounded-2xl text-xs font-black text-[#1a1a1a] placeholder-gray-400 transition-all shadow-inner" />
+                  <input type="text" name="phone" required value={formData.phone} onChange={handleChange} placeholder={tStrings.phPhone} className="w-full bg-cream border border-cream focus:border-gold outline-none px-5 py-4.5 rounded-2xl text-xs font-black text-[#1a1a1a] placeholder-gray-400 transition-all shadow-inner" />
+                  <input type="email" name="email" required value={formData.email} onChange={handleChange} placeholder={tStrings.phEmail} className="w-full bg-cream border border-cream focus:border-gold outline-none px-5 py-4.5 rounded-2xl text-xs font-black text-[#1a1a1a] placeholder-gray-400 transition-all shadow-inner" />
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div className="relative group/field bg-cream border border-cream rounded-2xl transition-all focus-within:border-gold shadow-inner overflow-hidden">
-                      <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                        <CalendarDays size={18} className="text-gray-400 group-focus-within/field:text-gold" />
-                      </div>
-                      <input 
-                        type="date" 
-                        name="date"
-                        required
-                        min={today}
-                        value={formData.date}
-                        onChange={handleChange}
-                        className="w-full bg-transparent outline-none pl-12 pr-3 py-4.5 text-[10px] font-black text-[#1a1a1a] uppercase cursor-pointer"
-                      />
+                      <CalendarDays size={18} className="absolute inset-y-0 left-4 flex items-center text-gray-400" />
+                      <input type="date" name="date" required min={today} value={formData.date} onChange={handleChange} className="w-full bg-transparent outline-none pl-12 pr-3 py-4.5 text-[10px] font-black text-[#1a1a1a] uppercase cursor-pointer" />
                     </div>
                     <div className="relative group/field bg-cream border border-cream rounded-2xl transition-all focus-within:border-gold shadow-inner overflow-hidden">
-                      <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                        <Timer size={18} className="text-gray-400 group-focus-within/field:text-gold" />
-                      </div>
-                      <input 
-                        type="time" 
-                        name="time"
-                        required
-                        value={formData.time}
-                        onChange={handleChange}
-                        className="w-full bg-transparent outline-none pl-12 pr-3 py-4.5 text-[10px] font-black text-[#1a1a1a] cursor-pointer"
-                      />
+                      <Timer size={18} className="absolute inset-y-0 left-4 flex items-center text-gray-400" />
+                      <input type="time" name="time" required value={formData.time} onChange={handleChange} className="w-full bg-transparent outline-none pl-12 pr-3 py-4.5 text-[10px] font-black text-[#1a1a1a] cursor-pointer" />
                     </div>
                   </div>
 
                   <div className="relative group/field bg-cream border border-cream rounded-2xl transition-all focus-within:border-gold shadow-inner" ref={passengerRef}>
-                    <button
-                      type="button"
-                      onClick={() => setShowPassengerDropdown(!showPassengerDropdown)}
-                      className="w-full flex items-center gap-4 pl-5 pr-5 py-4.5"
-                    >
-                      <Users size={18} className="text-gray-400 group-focus-within/field:text-gold" />
+                    <button type="button" onClick={() => setShowPassengerDropdown(!showPassengerDropdown)} className="w-full flex items-center gap-4 pl-5 pr-5 py-4.5">
+                      <Users size={18} className="text-gray-400" />
                       <div className="flex-1 text-left">
-                        <span className="text-[10px] font-black text-[#1a1a1a] uppercase tracking-wider block">YOLCU SAYISI</span>
-                        <span className="text-[11px] font-bold text-gray-600 block leading-tight mt-0.5">{adults} Yetişkin, {children} Çocuk</span>
+                        <span className="text-[10px] font-black text-[#1a1a1a] uppercase tracking-wider block">{tStrings.paxLabel}</span>
+                        <span className="text-[11px] font-bold text-gray-600 block leading-tight mt-0.5">{tStrings.paxValue}</span>
                       </div>
                       <ChevronRight size={16} className={`text-gold transition-transform duration-300 ${showPassengerDropdown ? 'rotate-90' : ''}`} />
                     </button>
-
                     <AnimatePresence>
                       {showPassengerDropdown && (
-                        <motion.div 
-                          initial={{ opacity: 0, y: 10 }} 
-                          animate={{ opacity: 1, y: 0 }} 
-                          exit={{ opacity: 0, y: 10 }}
-                          className="absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-md border border-white rounded-[2rem] p-6 shadow-2xl z-50 space-y-5"
-                        >
-                          <PassengerCounter title="Yetişkin" value={adults} setValue={setAdults} min={1} />
+                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-md border border-white rounded-[2rem] p-6 shadow-2xl z-50 space-y-5">
+                          <PassengerCounter title={tStrings.adult} value={adults} setValue={setAdults} min={1} />
                           <div className="h-px bg-cream" />
-                          <PassengerCounter title="Çocuk (2-12 yaş)" value={children} setValue={setChildren} min={0} />
+                          <PassengerCounter title={tStrings.child} value={children} setValue={setChildren} min={0} />
                         </motion.div>
                       )}
                     </AnimatePresence>
                   </div>
 
-                  <textarea 
-                    name="details"
-                    required
-                    rows={3}
-                    value={formData.details}
-                    onChange={handleChange}
-                    placeholder="Güzergah ve Özel Talepleriniz..." 
-                    className="w-full bg-cream border border-cream focus:border-gold outline-none px-5 py-4.5 rounded-2xl text-xs font-black text-[#1a1a1a] placeholder-gray-400 transition-all shadow-inner resize-none"
-                  />
+                  <textarea name="details" required rows={3} value={formData.details} onChange={handleChange} placeholder={tStrings.details} className="w-full bg-cream border border-cream focus:border-gold outline-none px-5 py-4.5 rounded-2xl text-xs font-black text-[#1a1a1a] placeholder-gray-400 transition-all shadow-inner resize-none" />
                   
-                  <AnimatePresence mode="wait">
+                  <button type="submit" disabled={isSubmitting} className="bg-[#1a1a1a] hover:bg-gold text-white px-8 py-5 rounded-2xl font-black uppercase text-[11px] tracking-[0.2em] transition-all shadow-xl active:scale-95 flex items-center justify-center gap-3 w-full">
+                    {isSubmitting ? tStrings.btnSending : <>{tStrings.btnSend} <Send size={16} /></>}
+                  </button>
+                  <AnimatePresence>
                     {submitStatus === "success" && (
                       <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="bg-green-500/10 border border-green-500/20 text-green-700 text-[10px] font-black uppercase p-4 rounded-2xl text-center">
-                        Talebiniz başarıyla Gönderildi.
-                        Bizimle iletişime geçtiğiniz için Teşekkür ederiz. Mümkün olan en kısa sürede sizi arayacağız.
+                        {tStrings.successMsg}
                       </motion.div>
                     )}
                   </AnimatePresence>
-
-                  <button 
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="bg-[#1a1a1a] hover:bg-gold text-white px-8 py-5 rounded-2xl font-black uppercase text-[11px] tracking-[0.2em] transition-all shadow-xl active:scale-95 flex items-center justify-center gap-3 w-full disabled:opacity-70 disabled:cursor-not-allowed"
-                  >
-                    {isSubmitting ? "GÖNDERİLİYOR..." : <> GÖNDER <Send size={16} /></>}
-                  </button>
                 </form>
               </div>
             </motion.aside>
@@ -313,23 +254,9 @@ function PassengerCounter({ title, value, setValue, min }: { title: string, valu
     <div className="flex items-center justify-between gap-4">
       <span className="text-xs font-black uppercase text-[#1a1a1a] tracking-wider">{title}</span>
       <div className="flex items-center gap-4 bg-cream p-1.5 rounded-full border border-cream-dark shadow-inner">
-        <button 
-          type="button" 
-          onClick={() => setValue(Math.max(min, value - 1))}
-          className="w-8 h-8 bg-white/80 rounded-full flex items-center justify-center text-gray-500 hover:bg-white hover:text-gold transition-all border border-cream shadow-sm disabled:opacity-50"
-          disabled={value <= min}
-        >
-          <Minus size={14} strokeWidth={3} />
-        </button>
+        <button type="button" onClick={() => setValue(Math.max(min, value - 1))} className="w-8 h-8 bg-white/80 rounded-full flex items-center justify-center text-gray-500 hover:bg-white hover:text-gold transition-all border border-cream shadow-sm disabled:opacity-50" disabled={value <= min}><Minus size={14} strokeWidth={3} /></button>
         <span className="text-sm font-black text-[#1a1a1a] w-6 text-center">{value}</span>
-        <button 
-          type="button" 
-          onClick={() => setValue(value + 1)}
-          className="w-8 h-8 bg-white/80 rounded-full flex items-center justify-center text-gray-500 hover:bg-white hover:text-gold transition-all border border-cream shadow-sm disabled:opacity-50"
-          disabled={value >= 12}
-        >
-          <Plus size={14} strokeWidth={3} />
-        </button>
+        <button type="button" onClick={() => setValue(value + 1)} className="w-8 h-8 bg-white/80 rounded-full flex items-center justify-center text-gray-500 hover:bg-white hover:text-gold transition-all border border-cream shadow-sm"><Plus size={14} strokeWidth={3} /></button>
       </div>
     </div>
   );

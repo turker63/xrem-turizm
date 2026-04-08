@@ -5,10 +5,12 @@ import { useState, useRef, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import { useLanguage } from "@/context/LanguageContext";
 import { Clock, CheckCircle2, Send, CalendarDays, Users, Timer, ChevronRight, Plus, Minus, Plane, MapPin, Map, Info, Wifi, Coffee, ShieldCheck, Car } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 export default function AntalyaHavalimaniVipTransferPage() {
+  const { lang } = useLanguage();
   const today = new Date().toISOString().split('T')[0];
 
   const [formData, setFormData] = useState({
@@ -28,6 +30,51 @@ export default function AntalyaHavalimaniVipTransferPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
 
+  const tStrings = {
+    badge: lang === 'en' ? "Official Airport Guide" : "VIP Transfer Rehberi",
+    title1: lang === 'en' ? "ANTALYA AIRPORT" : "ANTALYA HAVALİMANI",
+    title2: lang === 'en' ? "VIP TRANSFER GUIDE" : "VIP TRANSFER REHBERİ",
+    generalInfo: lang === 'en' ? "General Information" : "Genel Bilgiler",
+    generalDesc: lang === 'en' 
+      ? "Antalya Airport (AYT) is located in the Yeşilköy neighborhood of Muratpaşa district, 12 km from the city center. It hosts millions of local and foreign tourists visiting Turkey's southern coasts every year. Operated by DHMİ, it's one of the busiest hubs in the Mediterranean."
+      : "Antalya Havalimanı, Muratpaşa ilçesi Yeşilköy mahallesinde merkeze 12 km uzaklıktadır. Yaz aylarında Türkiye'nin güney sahillerine gelen milyonlarca yerli ve yabancı turiste ev sahipliği yapmaktadır. IATA Kodu: AYT, meydan DHMİ tarafından işletilmektedir.",
+    terminals: lang === 'en' ? "Terminals" : "Terminaller",
+    t1: lang === 'en' ? "International Terminal 1" : "Dış Hatlar Terminal 1",
+    t2: lang === 'en' ? "International Terminal 2" : "Dış Hatlar Terminal 2",
+    dom: lang === 'en' ? "Domestic Terminal" : "İç Hatlar Terminali",
+    capacity: lang === 'en' ? "Capacity & Carriers" : "Kapasite & Şirketler",
+    capacityDesc: lang === 'en'
+      ? "Annual capacity of over 35 million passengers. Served by Turkish Airlines, Pegasus, SunExpress, and worldwide charter flights."
+      : "Yıllık 35 milyondan fazla yolcu kapasitesi. THY, Pegasus, SunExpress ve dünya genelinden charter uçuşları.",
+    timesTitle: lang === 'en' ? "Transfer Durations" : "Transfer Süreleri",
+    cat1: lang === 'en' ? "City & Surroundings" : "Şehir & Çevresi",
+    cat2: lang === 'en' ? "East Antalya" : "Doğu Antalya",
+    cat3: lang === 'en' ? "West Antalya" : "Batı Antalya",
+    longDesc1: lang === 'en'
+      ? "Our airport transfer services are carried out with latest model VIP vehicles at the most affordable prices. For 10 years, we have been meeting you at the airport with VIP vehicles and delivering you safely to your hotel or any point you desire. WiFi, TV, and cold beverage treats are always available in our vehicles."
+      : "Havalimanı transfer hizmetlerimiz son model VIP araçlarla en uygun fiyatlara yapılmaktadır. 10 yıldır havalimanında sizi VIP araçla karşılar, otelinize veya istediğiniz herhangi bir noktaya güvenle ulaştırırız. Araçlarımızın içerisinde WiFi, TV ve soğuk içecek ikramlarımız her zaman mevcuttur.",
+    longDesc2: lang === 'en'
+      ? "Regardless of where your hotel is in Antalya, your journey begins as soon as you step off the plane. If you wish to take a city tour after your hotel check-in, you can travel VIP to any destination for a fee. Let your holiday start in the vehicle; baby seats are added upon request for our little guests."
+      : "Oteliniz Antalya'nın neresinde olursa olsun uçaktan iner inmez yolculuğunuz başlar. Otelden sonra şehir turu yapmak isterseniz, ücret karşılığında istediğiniz yere VIP olarak seyahat edebilirsiniz. Tatiliniz araçtayken başlasın; bebek koltuğu talebiniz doğrultusunda aracınıza eklenir.",
+    legal: lang === 'en' ? "Legal Guarantee" : "Yasal Güvence",
+    wifi: lang === 'en' ? "Free WiFi" : "Ücretsiz WiFi",
+    coffee: lang === 'en' ? "Cold Drinks" : "Soğuk İkram",
+    fleet: lang === 'en' ? "Luxury Fleet" : "Lüks Filo",
+    formTitle: lang === 'en' ? "CONTACT US!" : "BİZİMLE İLETİŞİME GEÇİN!",
+    formDesc: lang === 'en' ? "To get a reservation and detailed information, please fill out the form below! We will call you as soon as possible." : "Rezervasyon ve detaylı bilgi almak için Lütfen aşağıdaki formu doldurarak bizimle iletişime geçin!",
+    phName: lang === 'en' ? "Your Full Name" : "Adınız Soyadınız",
+    phPhone: lang === 'en' ? "Your Phone Number" : "Telefon Numaranız",
+    phEmail: lang === 'en' ? "Your Email Address" : "E-posta Adresiniz",
+    paxLabel: lang === 'en' ? "PASSENGERS" : "YOLCU",
+    paxValue: lang === 'en' ? `${adults} Adult, ${children} Child` : `${adults} Yetişkin, ${children} Çocuk`,
+    adult: lang === 'en' ? "Adult" : "Yetişkin",
+    child: lang === 'en' ? "Child" : "Çocuk",
+    details: lang === 'en' ? "Flight Code, Hotel Name, and Baby Seat Request..." : "Uçuş Kodu, Otel Adı ve Bebek Koltuğu Talebi...",
+    btnSend: lang === 'en' ? "SEND NOW" : "GÖNDER",
+    btnSending: lang === 'en' ? "SENDING..." : "GÖNDERİLİYOR...",
+    successMsg: lang === 'en' ? "Your request has been sent successfully. Thank you for contacting us. We will call you shortly." : "Talebiniz başarıyla gönderildi. Bizimle iletişime geçtiğiniz için teşekkür ederiz. En kısa sürede sizi arayacağız."
+  };
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (passengerRef.current && !passengerRef.current.contains(event.target as Node)) {
@@ -43,7 +90,7 @@ export default function AntalyaHavalimaniVipTransferPage() {
     setIsSubmitting(true);
     setSubmitStatus("idle");
 
-    const passengerCountText = `${adults} Yetişkin, ${children} Çocuk`;
+    const passengerCountText = `${adults} ${tStrings.adult}, ${children} ${tStrings.child}`;
 
     try {
       const { error } = await supabase
@@ -104,9 +151,9 @@ export default function AntalyaHavalimaniVipTransferPage() {
           <div className="w-16 h-16 bg-white/60 border border-white rounded-[2rem] flex items-center justify-center text-gold mx-auto mb-6 shadow-lg">
             <Plane size={32} />
           </div>
-          <span className="text-[10px] font-black text-gold tracking-[0.5em] uppercase mb-4 block italic">Official Airport Guide</span>
+          <span className="text-[10px] font-black text-gold tracking-[0.5em] uppercase mb-4 block italic">{tStrings.badge}</span>
           <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-[#1a1a1a] italic leading-tight mb-6">
-            ANTALYA HAVALİMANI <br /> <span className="text-gold">VIP TRANSFER REHBERİ</span>
+            {tStrings.title1} <br /> <span className="text-gold">{tStrings.title2}</span>
           </h1>
           <div className="h-1.5 w-24 bg-gold mx-auto rounded-full shadow-lg" />
         </motion.div>
@@ -121,83 +168,79 @@ export default function AntalyaHavalimaniVipTransferPage() {
               <div className="bg-white/40 backdrop-blur-md border border-white p-8 md:p-12 rounded-[3.5rem] shadow-xl space-y-8">
                 <div className="space-y-4">
                   <h2 className="text-2xl font-black italic uppercase text-[#1a1a1a] tracking-tighter flex items-center gap-3">
-                    <Info className="text-gold" /> Genel Bilgiler
+                    <Info className="text-gold" /> {tStrings.generalInfo}
                   </h2>
                   <p className="text-gray-700 font-bold text-sm leading-relaxed text-justify opacity-90">
-                    Antalya Havalimanı, Muratpaşa ilçesi Yeşilköy mahallesinde merkeze 12 km uzaklıktadır. Yaz aylarında Türkiye'nin güney sahillerine gelen milyonlarca yerli ve yabancı turiste ev sahipliği yapmaktadır. IATA Kodu: AYT, ICAO Kodu: LTAI olan meydan DHMİ tarafından işletilmektedir.
+                    {tStrings.generalDesc}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="bg-white/50 p-6 rounded-3xl border border-white shadow-sm">
-                    <h3 className="text-gold font-black text-xs uppercase tracking-widest mb-4">Terminaller</h3>
+                    <h3 className="text-gold font-black text-xs uppercase tracking-widest mb-4">{tStrings.terminals}</h3>
                     <ul className="text-xs font-bold text-gray-600 space-y-2">
-                      <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-gold rounded-full"/> Dış Hatlar Terminal 1</li>
-                      <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-gold rounded-full"/> Dış Hatlar Terminal 2</li>
-                      <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-gold rounded-full"/> İç Hatlar Terminali</li>
+                      <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-gold rounded-full"/> {tStrings.t1}</li>
+                      <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-gold rounded-full"/> {tStrings.t2}</li>
+                      <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-gold rounded-full"/> {tStrings.dom}</li>
                     </ul>
                   </div>
                   <div className="bg-white/50 p-6 rounded-3xl border border-white shadow-sm">
-                    <h3 className="text-gold font-black text-xs uppercase tracking-widest mb-4">Kapasite & Şirketler</h3>
+                    <h3 className="text-gold font-black text-xs uppercase tracking-widest mb-4">{tStrings.capacity}</h3>
                     <p className="text-[11px] font-bold text-gray-600 leading-relaxed">
-                      Yıllık 35 milyondan fazla yolcu kapasitesi. THY, Pegasus, SunExpress ve dünya genelinden charter uçuşları.
+                      {tStrings.capacityDesc}
                     </p>
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <h2 className="text-2xl font-black italic uppercase text-[#1a1a1a] tracking-tighter flex items-center gap-3">
-                    <Map className="text-gold" /> Transfer Süreleri
+                    <Map className="text-gold" /> {tStrings.timesTitle}
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <TimeCard title="Şehir & Çevresi" items={[
-                      {n: "Merkez", t: "20-25 dk"},
-                      {n: "Lara", t: "15-20 dk"},
-                      {n: "Konyaaltı", t: "25-30 dk"}
+                    <TimeCard title={tStrings.cat1} items={[
+                      {n: lang === 'en' ? "Center" : "Merkez", t: "20-25 min"},
+                      {n: "Lara", t: "15-20 min"},
+                      {n: "Konyaaltı", t: "25-30 min"}
                     ]} />
-                    <TimeCard title="Doğu Antalya" items={[
-                      {n: "Belek", t: "30-35 dk"},
-                      {n: "Side", t: "60 dk"},
-                      {n: "Alanya", t: "2-2.5 sa"}
+                    <TimeCard title={tStrings.cat2} items={[
+                      {n: "Belek", t: "30-35 min"},
+                      {n: "Side", t: "60 min"},
+                      {n: "Alanya", t: "2-2.5 h"}
                     ]} />
-                    <TimeCard title="Batı Antalya" items={[
-                      {n: "Kemer", t: "50-60 dk"},
-                      {n: "Göynük", t: "45-50 dk"},
-                      {n: "Kaş/Kalkan", t: "3-3.5 sa"}
+                    <TimeCard title={tStrings.cat3} items={[
+                      {n: "Kemer", t: "50-60 min"},
+                      {n: "Göynük", t: "45-50 min"},
+                      {n: "Kaş/Kalkan", t: "3-3.5 h"}
                     ]} />
                   </div>
                 </div>
 
                 <div className="space-y-6 text-gray-700 font-bold text-sm leading-relaxed text-justify opacity-90">
-                  <p>
-                    Havalimanı transfer hizmetlerimiz son model VIP araçlarla en uygun fiyatlara yapılmaktadır. 10 yıldır havalimanında sizi VIP araçla karşılar, otelinize veya istediğiniz herhangi bir noktaya güvenle ulaştırırız. Araçlarımızın içerisinde WiFi, TV ve soğuk içecek ikramlarımız her zaman mevcuttur. Transfer süresi boyunca rahat ve konforunuz havalimanından başlayarak otele kadar devam eder.
-                  </p>
-                  <p>
-                    Oteliniz Antalya'nın neresinde olursa olsun uçaktan iner inmez yolculuğunuz başlar. Otelden sonra şehir turu yapmak isterseniz, ücret karşılığında istediğiniz yere VIP olarak seyahat edebilirsiniz. Tatiliniz araçtayken başlasın; bebek koltuğu talebiniz doğrultusunda aracınıza eklenir ve minik misafirlerimiz de güvenle seyahat eder.
-                  </p>
+                  <p>{tStrings.longDesc1}</p>
+                  <p>{tStrings.longDesc2}</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <FeatureSmall icon={ShieldCheck} t="Yasal Güvence" />
-                <FeatureSmall icon={Wifi} t="Ücretsiz WiFi" />
-                <FeatureSmall icon={Coffee} t="Soğuk İkram" />
-                <FeatureSmall icon={Car} t="Lüks Filo" />
+                <FeatureSmall icon={ShieldCheck} t={tStrings.legal} />
+                <FeatureSmall icon={Wifi} t={tStrings.wifi} />
+                <FeatureSmall icon={Coffee} t={tStrings.coffee} />
+                <FeatureSmall icon={Car} t={tStrings.fleet} />
               </div>
 
             </motion.div>
 
             <motion.aside initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-5 xl:col-span-4 space-y-8 lg:sticky lg:top-32">
               <div className="bg-white/80 backdrop-blur-xl border border-white p-8 md:p-10 rounded-[3rem] shadow-2xl relative overflow-hidden">
-                <h4 className="text-[#1a1a1a] font-black text-2xl uppercase italic tracking-tighter mb-2 text-center">BİZİMLE İLETİŞİME GEÇİN!</h4>
+                <h4 className="text-[#1a1a1a] font-black text-2xl uppercase italic tracking-tighter mb-2 text-center">{tStrings.formTitle}</h4>
                 <p className="text-gray-500 text-[9px] font-bold uppercase tracking-widest mb-8 leading-relaxed text-center opacity-80">
-                  Rezervasyon ve detaylı bilgi almak için Lütfen aşağıdaki formu doldurarak bizimle iletişime geçin! En kısa sürede sizi arayalım.
+                  {tStrings.formDesc}
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
-                  <input type="text" name="name" required value={formData.name} onChange={handleChange} placeholder="Adınız Soyadınız" className="w-full bg-cream border border-cream focus:border-gold outline-none px-5 py-4.5 rounded-2xl text-xs font-black text-[#1a1a1a] placeholder-gray-400 shadow-inner" />
-                  <input type="text" name="phone" required value={formData.phone} onChange={handleChange} placeholder="Telefon Numaranız" className="w-full bg-cream border border-cream focus:border-gold outline-none px-5 py-4.5 rounded-2xl text-xs font-black text-[#1a1a1a] shadow-inner" />
-                  <input type="email" name="email" required value={formData.email} onChange={handleChange} placeholder="E-posta Adresiniz" className="w-full bg-cream border border-cream focus:border-gold outline-none px-5 py-4.5 rounded-2xl text-xs font-black text-[#1a1a1a] shadow-inner" />
+                  <input type="text" name="name" required value={formData.name} onChange={handleChange} placeholder={tStrings.phName} className="w-full bg-cream border border-cream focus:border-gold outline-none px-5 py-4.5 rounded-2xl text-xs font-black text-[#1a1a1a] placeholder-gray-400 shadow-inner" />
+                  <input type="text" name="phone" required value={formData.phone} onChange={handleChange} placeholder={tStrings.phPhone} className="w-full bg-cream border border-cream focus:border-gold outline-none px-5 py-4.5 rounded-2xl text-xs font-black text-[#1a1a1a] shadow-inner" />
+                  <input type="email" name="email" required value={formData.email} onChange={handleChange} placeholder={tStrings.phEmail} className="w-full bg-cream border border-cream focus:border-gold outline-none px-5 py-4.5 rounded-2xl text-xs font-black text-[#1a1a1a] shadow-inner" />
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div className="relative bg-cream border border-cream rounded-2xl focus-within:border-gold shadow-inner overflow-hidden">
@@ -214,34 +257,31 @@ export default function AntalyaHavalimaniVipTransferPage() {
                     <button type="button" onClick={() => setShowPassengerDropdown(!showPassengerDropdown)} className="w-full flex items-center gap-4 px-5 py-4.5">
                       <Users size={18} className="text-gray-400" />
                       <div className="flex-1 text-left">
-                        <span className="text-[10px] font-black text-[#1a1a1a] uppercase tracking-wider block">YOLCU</span>
-                        <span className="text-[11px] font-bold text-gray-600 block leading-tight">{adults} Yetişkin, {children} Çocuk</span>
+                        <span className="text-[10px] font-black text-[#1a1a1a] uppercase tracking-wider block">{tStrings.paxLabel}</span>
+                        <span className="text-[11px] font-bold text-gray-600 block leading-tight">{tStrings.paxValue}</span>
                       </div>
                       <ChevronRight size={16} className={`text-gold transition-transform ${showPassengerDropdown ? 'rotate-90' : ''}`} />
                     </button>
                     <AnimatePresence>
                       {showPassengerDropdown && (
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-md border border-white rounded-[2rem] p-6 shadow-2xl z-50 space-y-5">
-                          <Counter title="Yetişkin" value={adults} set={setAdults} min={1} />
-                          <Counter title="Çocuk" value={children} set={setChildren} min={0} />
+                          <Counter title={tStrings.adult} value={adults} set={setAdults} min={1} />
+                          <Counter title={tStrings.child} value={children} set={setChildren} min={0} />
                         </motion.div>
                       )}
-
                     </AnimatePresence>
                   </div>
 
-                  <textarea name="details" required rows={3} value={formData.details} onChange={handleChange} placeholder="Uçuş Kodu, Otel Adı ve Bebek Koltuğu Talebi..." className="w-full bg-cream border border-cream focus:border-gold outline-none px-5 py-4.5 rounded-2xl text-xs font-black text-[#1a1a1a] shadow-inner resize-none" />
+                  <textarea name="details" required rows={3} value={formData.details} onChange={handleChange} placeholder={tStrings.details} className="w-full bg-cream border border-cream focus:border-gold outline-none px-5 py-4.5 rounded-2xl text-xs font-black text-[#1a1a1a] shadow-inner resize-none" />
                   
-                
-
                   <button type="submit" disabled={isSubmitting} className="bg-[#1a1a1a] hover:bg-gold text-white px-8 py-5 rounded-2xl font-black uppercase text-[11px] tracking-[0.2em] transition-all shadow-xl active:scale-95 w-full flex items-center justify-center gap-3">
-                    {isSubmitting ? "GÖNDERİLİYOR..." : <>GÖNDER <Send size={16} /></>}
+                    {isSubmitting ? tStrings.btnSending : <>{tStrings.btnSend} <Send size={16} /></>}
                   </button>
+
                   <AnimatePresence>
-                                          {submitStatus === "success" && (
+                    {submitStatus === "success" && (
                       <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="bg-green-500/10 border border-green-500/20 text-green-700 text-[10px] font-black uppercase p-4 rounded-2xl text-center">
-                        Talebiniz başarıyla Gönderildi.
-                        Bizimle iletişime geçtiğiniz için Teşekkür ederiz. Mümkün olan en kısa sürede sizi arayacağız.
+                        {tStrings.successMsg}
                       </motion.div>
                     )}
                   </AnimatePresence>
