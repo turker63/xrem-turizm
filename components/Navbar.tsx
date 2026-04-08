@@ -108,7 +108,7 @@ export default function Navbar() {
             </div>
           </div>
 
-          <div className="hidden lg:flex flex-1 justify-center gap-6 text-[8px] font-black text-luxury-gray uppercase tracking-[0.3em] italic">
+          <div className="hidden lg:flex flex-1 justify-center gap-6 text-[11px] font-black text-luxury-gray uppercase tracking-[0.3em] italic translate-x-16">
             {navLinks.map((link) => (
               <Link key={link.href} href={link.href} className="hover:text-gold transition-all relative group whitespace-nowrap">{link.name}</Link>
             ))}

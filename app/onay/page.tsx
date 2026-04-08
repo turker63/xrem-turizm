@@ -6,12 +6,26 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, Copy, Check, Ticket, ChevronRight, Home, Smartphone } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useLanguage } from '@/context/LanguageContext';
 
 function OnayContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pnr = searchParams.get("pnr");
   const [copied, setCopied] = useState(false); 
+  const { lang } = useLanguage();
+
+  const tStrings = {
+    title1: lang === 'en' ? "PAYMENT" : "ÖDEME",
+    title2: lang === 'en' ? "CONFIRMED." : "ONAYLANDI.",
+    subtitle1: lang === 'en' ? "CONGRATULATIONS! YOUR BOOKING HAS BEEN CREATED." : "TEBRİKLER! REZERVASYONUNUZ OLUŞTURULDU.",
+    subtitle2: lang === 'en' ? "YOUR PRIVATE VEHICLE AND DRIVER ARE BEING PREPARED." : "SİZE ÖZEL ARACINIZ VE ŞOFÖRÜNÜZ HAZIRLANIYOR.",
+    pnrLabel: lang === 'en' ? "YOUR BOOKING CODE" : "REZERVASYON KODUNUZ",
+    notice: lang === 'en' ? "WE RECOMMEND KEEPING YOUR PNR CODE CONFIDENTIAL THROUGHOUT YOUR JOURNEY." : "PNR KODUNUZU SEYAHATİNİZ BOYUNCA SAKLI TUTMANIZI ÖNERİYORUZ.",
+    btnTicket: lang === 'en' ? "VIEW TICKET" : "BİLETİ GÖRÜNTÜLE",
+    btnHome: lang === 'en' ? "RETURN TO HOME" : "ANA SAYFAYA DÖN",
+    loadingMsg: lang === 'en' ? "Sealing System..." : "Sistem Mühürleniyor..."
+  };
 
   const copyToClipboard = () => {
     if (pnr) {
@@ -44,12 +58,12 @@ function OnayContent() {
         transition={{ delay: 0.2 }}
       >
         <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 text-[#1a1a1a]">
-          ÖDEME <span className="text-gold">ONAYLANDI.</span>
+          {tStrings.title1} <span className="text-gold">{tStrings.title2}</span>
         </h1>
         <div className="h-1.5 w-24 bg-gold mx-auto mb-8 rounded-full" />
         <p className="text-gray-600 text-[11px] md:text-sm tracking-[0.4em] uppercase mb-12 font-bold opacity-80 leading-relaxed">
-          TEBRİKLER! REZERVASYONUNUZ OLUŞTURULDU. <br/>
-          SİZE ÖZEL ARACINIZ VE ŞOFÖRÜNÜZ HAZIRLANIYOR.
+          {tStrings.subtitle1} <br/>
+          {tStrings.subtitle2}
         </p>
       </motion.div>
 
@@ -64,7 +78,7 @@ function OnayContent() {
         <div className="flex flex-col items-center gap-6">
             <div className="flex items-center gap-3 bg-gray-50 px-5 py-2 rounded-full border border-gray-100 shadow-inner">
                 <Ticket size={16} className="text-gold" />
-                <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">REZERVASYON KODUNUZ</span>
+                <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{tStrings.pnrLabel}</span>
             </div>
             
             <div className="flex flex-col md:flex-row items-center gap-4 w-full">
@@ -96,7 +110,7 @@ function OnayContent() {
         <div className="mt-10 pt-8 border-t border-gray-50">
            <div className="flex items-center justify-center gap-2 text-gray-400">
               <Smartphone size={14} />
-              <span className="text-[10px] uppercase font-black tracking-widest">PNR KODUNUZU SEYAHATİNİZ BOYUNCA SAKLI TUTMANIZI ÖNERİYORUZ.</span>
+              <span className="text-[10px] uppercase font-black tracking-widest">{tStrings.notice}</span>
            </div>
         </div>
       </motion.div>
@@ -107,7 +121,7 @@ function OnayContent() {
           onClick={() => router.push(`/sorgula?pnr=${pnr}`)}
           className="w-full md:w-auto bg-gold text-white px-12 py-6 rounded-[2rem] font-black uppercase text-[12px] tracking-[0.2em] transition-all shadow-2xl flex items-center justify-center gap-3 relative overflow-hidden group/btn"
         >
-          <span className="relative z-10 flex items-center gap-3">BİLETİ GÖRÜNTÜLE <ChevronRight size={18} /></span>
+          <span className="relative z-10 flex items-center gap-3">{tStrings.btnTicket} <ChevronRight size={18} /></span>
           <motion.div initial={{ x: "-100%" }} whileHover={{ x: "100%" }} transition={{ duration: 0.7 }} className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-25deg] z-5" />
         </motion.button>
 
@@ -116,7 +130,7 @@ function OnayContent() {
           onClick={() => router.push('/')}
           className="w-full md:w-auto text-gray-600 bg-white border border-gray-200 px-12 py-6 rounded-[2rem] font-black uppercase text-[12px] tracking-[0.2em] hover:bg-gray-50 transition-all shadow-lg flex items-center justify-center gap-3"
         >
-          <Home size={18} /> ANA SAYFAYA DÖN
+          <Home size={18} /> {tStrings.btnHome}
         </motion.button>
       </div>
     </div>
@@ -124,6 +138,9 @@ function OnayContent() {
 }
 
 export default function OnayPage() {
+  const { lang } = useLanguage();
+  const loadingMsg = lang === 'en' ? "Sealing System..." : "Sistem Mühürleniyor...";
+
   return (
     <main className="min-h-screen bg-white flex flex-col relative overflow-x-hidden">
       <Navbar />
@@ -137,7 +154,7 @@ export default function OnayPage() {
         <Suspense fallback={
           <div className="text-center flex flex-col items-center gap-6">
             <div className="w-16 h-16 border-4 border-gray-100 border-t-gold rounded-full animate-spin shadow-2xl"></div>
-            <span className="text-gold font-black uppercase tracking-[0.5em] text-[11px]">Sistem Mühürleniyor...</span>
+            <span className="text-gold font-black uppercase tracking-[0.5em] text-[11px]">{loadingMsg}</span>
           </div>
         }>
           <OnayContent />

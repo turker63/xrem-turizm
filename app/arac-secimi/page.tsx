@@ -6,6 +6,7 @@ import { Suspense, useEffect, useState, useRef } from "react";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import VehicleList from "@/components/VehicleList";
+import { useLanguage } from '@/context/LanguageContext';
 import { MapPin, Flag, Users, ArrowRightLeft, Star, X, Calendar, Clock, ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
@@ -17,6 +18,7 @@ function SelectionContent() {
   const pathname = usePathname();
   const formRef = useRef<HTMLDivElement>(null);
   const vehicleListRef = useRef<any>(null);
+  const { lang } = useLanguage();
 
   const [summary, setSummary] = useState<any>(null);
   const [isRoundTrip, setIsRoundTrip] = useState(false);
@@ -26,6 +28,23 @@ function SelectionContent() {
 
   const [gidis, setGidis] = useState({ pickup: "", dropoff: "", date: null as Date | null, time: "12:00" });
   const [donus, setDonus] = useState({ pickup: "", dropoff: "", date: null as Date | null, time: "18:00" });
+
+  const localeDateString = lang === 'en' ? 'en-US' : 'tr-TR';
+  
+  const tStrings = {
+    alertSame: lang === 'en' ? "Locations cannot be the same!" : "Noktalar aynı olamaz!",
+    vipCenter: lang === 'en' ? "VIP OPERATION CENTER" : "VIP OPERASYON MERKEZİ",
+    update1: lang === 'en' ? "UPDATE" : "ROTAYI",
+    update2: lang === 'en' ? "ROUTE" : "GÜNCELLE",
+    roundTripPkg: lang === 'en' ? "ROUND TRIP PACKAGE" : "GİDİŞ - DÖNÜŞ PAKETİ",
+    oneWayPkg: lang === 'en' ? "ONE WAY TRANSFER" : "TEK YÖN TRANSFER",
+    depPickup: lang === 'en' ? "DEPARTURE PICKUP" : "GİDİŞ KALKIŞ",
+    depDropoff: lang === 'en' ? "DEPARTURE DROPOFF" : "GİDİŞ VARIŞ",
+    retPickup: lang === 'en' ? "RETURN PICKUP" : "DÖNÜŞ KALKIŞ",
+    retDropoff: lang === 'en' ? "RETURN DROPOFF" : "DÖNÜŞ VARIŞ",
+    date: lang === 'en' ? "DATE" : "TARİH",
+    retDate: lang === 'en' ? "R.DATE" : "D.TARİH",
+  };
 
   useEffect(() => {
     const saved = localStorage.getItem("transferSummary");
@@ -113,7 +132,7 @@ function SelectionContent() {
     if (type === "d") ng.dropoff = name;
     if (type === "rp") nd.pickup = name;
     if (type === "rd") nd.dropoff = name;
-    if (ng.pickup === ng.dropoff || (isRoundTrip && nd.pickup === nd.dropoff)) { alert("Noktalar aynı olamaz!"); return; }
+    if (ng.pickup === ng.dropoff || (isRoundTrip && nd.pickup === nd.dropoff)) { alert(tStrings.alertSame); return; }
     updateGlobalState(ng, nd);
     setActiveDropdown(null);
   };
@@ -142,14 +161,17 @@ function SelectionContent() {
         updateGlobalState(ng, nd); setActiveDropdown(null);
       }} className={`w-8 h-8 rounded-full text-[10px] font-bold transition-all ${sel ? 'bg-gold text-white' : disabled ? 'text-gray-200' : 'hover:bg-gold/10 text-luxury-dark'}`}>{i}</button>);
     }
+    
+    const daysArr = lang === 'en' ? ['Mo','Tu','We','Th','Fr','Sa','Su'] : ['Pt','Sa','Ça','Pe','Cu','Ct','Pz'];
+    
     return (
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="absolute top-full left-0 mt-2 bg-white border p-4 rounded-2xl shadow-2xl z-[100] w-64">
         <div className="flex justify-between items-center mb-4 text-[11px] font-black uppercase">
           <button onClick={() => setCurrentMonth(new Date(year, month - 1))}><ChevronLeft size={14}/></button>
-          {new Intl.DateTimeFormat('tr', { month: 'long', year: 'numeric' }).format(currentMonth)}
+          {new Intl.DateTimeFormat(localeDateString, { month: 'long', year: 'numeric' }).format(currentMonth)}
           <button onClick={() => setCurrentMonth(new Date(year, month + 1))}><ChevronRight size={14}/></button>
         </div>
-        <div className="grid grid-cols-7 gap-1 text-center">{['Pt','Sa','Ça','Pe','Cu','Ct','Pz'].map(x => <div key={x} className="text-[8px] text-gray-400 font-bold">{x}</div>)}{items}</div>
+        <div className="grid grid-cols-7 gap-1 text-center">{daysArr.map(x => <div key={x} className="text-[8px] text-gray-400 font-bold">{x}</div>)}{items}</div>
       </motion.div>
     );
   };
@@ -184,12 +206,12 @@ function SelectionContent() {
       <motion.div ref={formRef} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8 bg-white/80 backdrop-blur-xl p-6 md:p-8 rounded-[3rem] border border-white shadow-2xl relative z-[100]">
         <div className="flex flex-col md:flex-row justify-between gap-4 mb-8 border-b pb-6">
           <div>
-            <div className="flex items-center gap-2 mb-1"><Star size={12} className="text-gold fill-gold" /><span className="text-[9px] font-black text-gold tracking-widest uppercase">VIP OPERASYON MERKEZİ</span></div>
-            <h1 className="text-2xl md:text-4xl font-black uppercase tracking-tighter text-luxury-dark italic">ROTAYI <span className="text-gold">GÜNCELLE</span></h1>
+            <div className="flex items-center gap-2 mb-1"><Star size={12} className="text-gold fill-gold" /><span className="text-[9px] font-black text-gold tracking-widest uppercase">{tStrings.vipCenter}</span></div>
+            <h1 className="text-2xl md:text-4xl font-black uppercase tracking-tighter text-luxury-dark italic">{tStrings.update1} <span className="text-gold">{tStrings.update2}</span></h1>
           </div>
           <div className="bg-white px-5 py-3 rounded-2xl border border-cream shadow-sm flex items-center gap-3">
             <Users size={16} className="text-gold" />
-            <span className="text-[10px] font-black text-luxury-dark tracking-widest uppercase">{isRoundTrip ? "GİDİŞ - DÖNÜŞ PAKETİ" : "TEK YÖN TRANSFER"}</span>
+            <span className="text-[10px] font-black text-luxury-dark tracking-widest uppercase">{isRoundTrip ? tStrings.roundTripPkg : tStrings.oneWayPkg}</span>
           </div>
         </div>
 
@@ -198,7 +220,7 @@ function SelectionContent() {
             <div className="flex-1 relative bg-cream/50 p-2 rounded-[2rem] border border-white flex flex-col md:flex-row gap-2">
               <div className="flex-1 relative">
                 <button onClick={() => setActiveDropdown('gp')} className="w-full flex items-center gap-3 bg-white p-3 rounded-2xl border border-cream-dark text-left relative pr-10">
-                  <MapPin size={18} className="text-gold" /><div className="overflow-hidden"><span className="block text-[8px] text-gray-400 font-black uppercase">GİDİŞ KALKIŞ</span><span className="block text-[11px] font-black text-luxury-dark uppercase truncate">{gidis.pickup}</span></div>
+                  <MapPin size={18} className="text-gold" /><div className="overflow-hidden"><span className="block text-[8px] text-gray-400 font-black uppercase">{tStrings.depPickup}</span><span className="block text-[11px] font-black text-luxury-dark uppercase truncate">{gidis.pickup}</span></div>
                   {gidis.pickup && <X onClick={(e) => handleClear('p', e)} size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-red-500 transition-colors" />}
                 </button>
                 <AnimatePresence>{activeDropdown === 'gp' && (
@@ -209,7 +231,7 @@ function SelectionContent() {
               </div>
               <div className="flex-1 relative">
                 <button onClick={() => setActiveDropdown('gd')} className="w-full flex items-center gap-3 bg-white p-3 rounded-2xl border border-cream-dark text-left relative pr-10">
-                  <Flag size={18} className="text-gold" /><div className="overflow-hidden"><span className="block text-[8px] text-gray-400 font-black uppercase">GİDİŞ VARIŞ</span><span className="block text-[11px] font-black text-luxury-dark uppercase truncate">{gidis.dropoff}</span></div>
+                  <Flag size={18} className="text-gold" /><div className="overflow-hidden"><span className="block text-[8px] text-gray-400 font-black uppercase">{tStrings.depDropoff}</span><span className="block text-[11px] font-black text-luxury-dark uppercase truncate">{gidis.dropoff}</span></div>
                   {gidis.dropoff && <X onClick={(e) => handleClear('d', e)} size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-red-500 transition-colors" />}
                 </button>
                 <AnimatePresence>{activeDropdown === 'gd' && (
@@ -222,7 +244,7 @@ function SelectionContent() {
             <div className="lg:w-72 bg-gold/5 p-2 rounded-[2rem] border border-gold/10 flex gap-2">
               <div className="flex-1 relative">
                 <button onClick={() => setActiveDropdown('gt')} className="w-full h-full flex flex-col justify-center items-center bg-white rounded-2xl border border-cream-dark p-2">
-                  <Calendar size={14} className="text-gold mb-1" /><span className="text-[10px] font-black text-luxury-dark">{gidis.date?.toLocaleDateString('tr') || "TARİH"}</span>
+                  <Calendar size={14} className="text-gold mb-1" /><span className="text-[10px] font-black text-luxury-dark">{gidis.date?.toLocaleDateString(localeDateString) || tStrings.date}</span>
                 </button>
                 <AnimatePresence>{activeDropdown === 'gt' && renderCalendar('g')}</AnimatePresence>
               </div>
@@ -240,7 +262,7 @@ function SelectionContent() {
               <div className="flex-1 relative bg-gold/5 p-2 rounded-[2rem] border border-gold/10 flex flex-col md:flex-row gap-2">
                 <div className="flex-1 relative">
                   <button onClick={() => setActiveDropdown('dp')} className="w-full flex items-center gap-3 bg-white p-3 rounded-2xl border border-cream-dark text-left relative pr-10">
-                    <MapPin size={18} className="text-gold" /><div className="overflow-hidden"><span className="block text-[8px] text-gray-400 font-black uppercase">DÖNÜŞ KALKIŞ</span><span className="block text-[11px] font-black text-luxury-dark uppercase truncate">{donus.pickup}</span></div>
+                    <MapPin size={18} className="text-gold" /><div className="overflow-hidden"><span className="block text-[8px] text-gray-400 font-black uppercase">{tStrings.retPickup}</span><span className="block text-[11px] font-black text-luxury-dark uppercase truncate">{donus.pickup}</span></div>
                     {donus.pickup && <X onClick={(e) => handleClear('rp', e)} size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-red-500 transition-colors" />}
                   </button>
                   <AnimatePresence>{activeDropdown === 'dp' && (
@@ -251,7 +273,7 @@ function SelectionContent() {
                 </div>
                 <div className="flex-1 relative">
                   <button onClick={() => setActiveDropdown('dd')} className="w-full flex items-center gap-3 bg-white p-3 rounded-2xl border border-cream-dark text-left relative pr-10">
-                    <Flag size={18} className="text-gold" /><div className="overflow-hidden"><span className="block text-[8px] text-gray-400 font-black uppercase">DÖNÜŞ VARIŞ</span><span className="block text-[11px] font-black text-luxury-dark uppercase truncate">{donus.dropoff}</span></div>
+                    <Flag size={18} className="text-gold" /><div className="overflow-hidden"><span className="block text-[8px] text-gray-400 font-black uppercase">{tStrings.retDropoff}</span><span className="block text-[11px] font-black text-luxury-dark uppercase truncate">{donus.dropoff}</span></div>
                     {donus.dropoff && <X onClick={(e) => handleClear('rd', e)} size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-red-500 transition-colors" />}
                   </button>
                   <AnimatePresence>{activeDropdown === 'dd' && (
@@ -264,7 +286,7 @@ function SelectionContent() {
               <div className="lg:w-72 bg-gold/5 p-2 rounded-[2rem] border border-gold/10 flex gap-2">
                 <div className="flex-1 relative">
                   <button onClick={() => setActiveDropdown('dt')} className="w-full h-full flex flex-col justify-center items-center bg-white rounded-2xl border border-cream-dark p-2">
-                    <Calendar size={14} className="text-gold mb-1" /><span className="text-[10px] font-black text-luxury-dark">{donus.date?.toLocaleDateString('tr') || "D.TARİH"}</span>
+                    <Calendar size={14} className="text-gold mb-1" /><span className="text-[10px] font-black text-luxury-dark">{donus.date?.toLocaleDateString(localeDateString) || tStrings.retDate}</span>
                   </button>
                   <AnimatePresence>{activeDropdown === 'dt' && renderCalendar('d')}</AnimatePresence>
                 </div>

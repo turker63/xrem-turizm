@@ -1,11 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function WhatsAppButton() {
-  // Buraya kendi telefon numaranı (başında + olmadan) yazmalısın
+  const { lang } = useLanguage();
+  
   const phoneNumber = "905322855572"; 
-  const message = "Merhaba XXREMTRANSFER, VIP transfer rezervasyonu hakkında bilgi almak istiyorum.";
+  const message = lang === 'en' 
+    ? "Hello XREMTRANSFER, I would like to get information about VIP transfer booking." 
+    : "Merhaba XREMTRANSFER, VIP transfer rezervasyonu hakkında bilgi almak istiyorum.";
+  
+  const hoverText = lang === 'en' ? "Quick Booking" : "Hızlı Rezervasyon";
 
   return (
     <motion.a
@@ -21,7 +27,7 @@ export default function WhatsAppButton() {
     >
       {/* Üzerine gelince açılan metin */}
       <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 whitespace-nowrap text-white text-[10px] font-black mr-0 group-hover:mr-3 uppercase tracking-[0.2em]">
-        Hızlı Rezervasyon
+        {hoverText}
       </span>
 
       {/* WhatsApp Logosu (SVG) */}

@@ -1,20 +1,22 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useSearchParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase"; 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useLanguage } from '@/context/LanguageContext';
 import { 
   ShieldCheck, CreditCard, Lock, CheckCircle2, 
-  AlertCircle, ArrowLeft, Landmark, Car, MapPin, Calendar
+  ArrowLeft, Landmark, Car, MapPin, Calendar
 } from "lucide-react";
 
 function PaymentContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pnr = searchParams.get("pnr");
+  const { lang } = useLanguage();
 
   const [booking, setBooking] = useState<any>(null);
   const [user, setUser] = useState<any>(null);
@@ -23,6 +25,30 @@ function PaymentContent() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const [cardData, setCardData] = useState({ number: "", holder: "", expiry: "", cvc: "" });
+
+  const tStrings = {
+    loading: lang === 'en' ? "Secure Connection..." : "Güvenli Bağlantı...",
+    ssl: lang === 'en' ? "256-BIT SSL SECURE PAYMENT" : "256-BİT SSL GÜVENLİ ÖDEME",
+    title1: lang === 'en' ? "COMPLETE" : "ÖDEMEYİ",
+    title2: lang === 'en' ? "PAYMENT" : "TAMAMLA",
+    cardTitle: lang === 'en' ? "Credit / Debit Card" : "Kredi / Banka Kartı",
+    cardName: lang === 'en' ? "Name on Card" : "Kart Üzerindeki İsim",
+    cardNamePh: lang === 'en' ? "FULL NAME" : "AD SOYAD",
+    cardNo: lang === 'en' ? "Card Number" : "Kart Numarası",
+    cardExp: lang === 'en' ? "Expiry (MM/YY)" : "S.K.T. (AA/YY)",
+    cardCvc: lang === 'en' ? "Security Code (CVC)" : "Güvenlik Kodu (CVC)",
+    btnConfirm: lang === 'en' ? "CONFIRM PAYMENT" : "ÖDEMEYİ ONAYLA",
+    btnProcessing: lang === 'en' ? "PROCESSING..." : "İŞLEM YAPILIYOR...",
+    btnSuccess: lang === 'en' ? "PAYMENT SUCCESSFUL" : "ÖDEME BAŞARILI",
+    btnError: lang === 'en' ? "TRY AGAIN" : "TEKRAR DENE",
+    orderDetail: lang === 'en' ? "Order Details" : "Sipariş Detayı",
+    pax: lang === 'en' ? "TRANSFER PASSENGER" : "TRANSFER YOLCUSU",
+    depRoute: lang === 'en' ? "DEPARTURE ROUTE" : "GİDİŞ ROTALAMASI",
+    retRoute: lang === 'en' ? "RETURN ROUTE" : "DÖNÜŞ ROTALAMASI",
+    vipCar: lang === 'en' ? "VIP VEHICLE" : "VIP ARAÇ",
+    total: lang === 'en' ? "TOTAL AMOUNT" : "TOPLAM TUTAR",
+    errorMsg: lang === 'en' ? "An error occurred during payment." : "Ödeme işlemi sırasında bir hata oluştu."
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -94,7 +120,7 @@ function PaymentContent() {
 
     } catch (err: any) {
       setPaymentStatus("error");
-      setErrorMessage(err.message || "Ödeme işlemi sırasında bir hata oluştu.");
+      setErrorMessage(err.message || tStrings.errorMsg);
     } finally {
       setLoading(false);
     }
@@ -103,7 +129,7 @@ function PaymentContent() {
   if (!booking) return (
     <div className="h-screen bg-cream flex flex-col items-center justify-center text-gold gap-4">
       <div className="w-12 h-12 border-4 border-cream-dark border-t-gold rounded-full animate-spin"></div>
-      <span className="font-black uppercase tracking-[0.4em] text-[10px]">Güvenli Bağlantı...</span>
+      <span className="font-black uppercase tracking-[0.4em] text-[10px]">{tStrings.loading}</span>
     </div>
   );
 
@@ -116,10 +142,10 @@ function PaymentContent() {
           animate={{ opacity: 1, y: 0 }}
           className="bg-emerald-50 text-emerald-600 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-3 mb-6 border border-emerald-100 shadow-sm"
         >
-          <Lock size={14} className="animate-pulse" /> 256-BİT SSL GÜVENLİ ÖDEME
+          <Lock size={14} className="animate-pulse" /> {tStrings.ssl}
         </motion.div>
         <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-luxury-dark italic">
-          ÖDEMEYİ <span className="text-gold">TAMAMLA</span>
+          {tStrings.title1} <span className="text-gold">{tStrings.title2}</span>
         </h1>
         <div className="h-1.5 w-24 bg-gold mt-4 rounded-full" />
       </div>
@@ -136,18 +162,18 @@ function PaymentContent() {
                   <div className="w-10 h-10 bg-cream rounded-xl flex items-center justify-center text-gold shadow-sm">
                     <CreditCard size={20} />
                   </div>
-                  <h3 className="text-sm font-black uppercase tracking-widest text-luxury-dark">Kredi / Banka Kartı</h3>
+                  <h3 className="text-sm font-black uppercase tracking-widest text-luxury-dark">{tStrings.cardTitle}</h3>
                 </div>
               </div>
 
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] text-luxury-gray font-black uppercase tracking-[0.2em] ml-1">Kart Üzerindeki İsim</label>
-                  <input required type="text" className="w-full bg-cream/30 border border-cream-dark p-5 rounded-2xl outline-none focus:border-gold focus:bg-white transition-all uppercase text-sm font-bold text-luxury-dark shadow-inner" placeholder="AD SOYAD" onChange={(e) => setCardData({...cardData, holder: e.target.value})} />
+                  <label className="text-[10px] text-luxury-gray font-black uppercase tracking-[0.2em] ml-1">{tStrings.cardName}</label>
+                  <input required type="text" className="w-full bg-cream/30 border border-cream-dark p-5 rounded-2xl outline-none focus:border-gold focus:bg-white transition-all uppercase text-sm font-bold text-luxury-dark shadow-inner" placeholder={tStrings.cardNamePh} onChange={(e) => setCardData({...cardData, holder: e.target.value})} />
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-[10px] text-luxury-gray font-black uppercase tracking-[0.2em] ml-1">Kart Numarası</label>
+                  <label className="text-[10px] text-luxury-gray font-black uppercase tracking-[0.2em] ml-1">{tStrings.cardNo}</label>
                   <div className="relative">
                     <input required type="text" value={cardData.number} onChange={handleCardNumber} className="w-full bg-cream/30 border border-cream-dark p-5 rounded-2xl outline-none focus:border-gold focus:bg-white transition-all text-lg tracking-[0.2em] font-mono font-bold text-luxury-dark shadow-inner" placeholder="0000 0000 0000 0000" />
                     <Landmark className="absolute right-5 top-5 text-luxury-gray/30" size={24} />
@@ -156,11 +182,11 @@ function PaymentContent() {
                 
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-[10px] text-luxury-gray font-black uppercase tracking-[0.2em] ml-1">S.K.T. (AA/YY)</label>
+                    <label className="text-[10px] text-luxury-gray font-black uppercase tracking-[0.2em] ml-1">{tStrings.cardExp}</label>
                     <input required type="text" value={cardData.expiry} onChange={handleExpiry} className="w-full bg-cream/30 border border-cream-dark p-5 rounded-2xl outline-none focus:border-gold focus:bg-white transition-all text-center font-mono font-bold text-luxury-dark" placeholder="MM/YY" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] text-luxury-gray font-black uppercase tracking-[0.2em] ml-1">Güvenlik Kodu (CVC)</label>
+                    <label className="text-[10px] text-luxury-gray font-black uppercase tracking-[0.2em] ml-1">{tStrings.cardCvc}</label>
                     <input required type="password" maxLength={3} className="w-full bg-cream/30 border border-cream-dark p-5 rounded-2xl outline-none focus:border-gold focus:bg-white transition-all text-center font-mono font-bold text-luxury-dark" placeholder="***" />
                   </div>
                 </div>
@@ -177,10 +203,10 @@ function PaymentContent() {
               }`}
             >
               <span className="relative z-10 flex items-center gap-3">
-                {paymentStatus === "idle" && <><Lock size={18} /> ÖDEMEYİ ONAYLA ({booking.totalPrice})</>} 
-                {paymentStatus === "processing" && <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> İŞLEM YAPILIYOR...</>} 
-                {paymentStatus === "success" && <><CheckCircle2 size={20} /> ÖDEME BAŞARILI</>}
-                {paymentStatus === "error" && "TEKRAR DENE"}
+                {paymentStatus === "idle" && <><Lock size={18} /> {tStrings.btnConfirm} ({booking.totalPrice})</>} 
+                {paymentStatus === "processing" && <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> {tStrings.btnProcessing}</>} 
+                {paymentStatus === "success" && <><CheckCircle2 size={20} /> {tStrings.btnSuccess}</>}
+                {paymentStatus === "error" && tStrings.btnError}
               </span>
               <motion.div initial={{ x: "-100%" }} whileHover={{ x: "100%" }} transition={{ duration: 0.7 }} className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-25deg] z-5" />
             </button>
@@ -192,12 +218,12 @@ function PaymentContent() {
             <div className="absolute -top-20 -right-20 w-48 h-48 bg-gold/10 rounded-full blur-3xl pointer-events-none" />
 
             <div className="flex justify-between items-center mb-10 border-b border-cream-dark pb-6">
-               <h3 className="font-black uppercase tracking-[0.2em] text-sm text-luxury-dark italic">Sipariş Detayı</h3>
+               <h3 className="font-black uppercase tracking-[0.2em] text-sm text-luxury-dark italic">{tStrings.orderDetail}</h3>
             </div>
             
             <div className="space-y-8 relative z-10">
               <div className="bg-cream/40 p-5 rounded-2xl border border-cream-dark/50">
-                <span className="text-[9px] font-black text-luxury-gray/60 uppercase tracking-widest block mb-2">TRANSFER YOLCUSU</span>
+                <span className="text-[9px] font-black text-luxury-gray/60 uppercase tracking-widest block mb-2">{tStrings.pax}</span>
                 <span className="text-base font-black text-luxury-dark tracking-tight uppercase">
                   {user ? `${user.user_metadata?.first_name || ""} ${user.user_metadata?.last_name || ""}`.trim() : (booking.fullName || booking.full_name)}
                 </span>
@@ -207,7 +233,7 @@ function PaymentContent() {
                 <div className="relative pl-8 border-l-2 border-gold/30 space-y-6">
                   <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-gold border-4 border-white shadow-sm" />
                   <div>
-                    <span className="text-[9px] font-black text-gold uppercase tracking-widest block mb-1">GİDİŞ ROTALAMASI</span>
+                    <span className="text-[9px] font-black text-gold uppercase tracking-widest block mb-1">{tStrings.depRoute}</span>
                     <span className="text-[13px] font-bold text-luxury-dark uppercase block leading-tight">{booking.pickup} ➔ {booking.dropoff}</span>
                     <div className="flex items-center gap-2 mt-2 text-[10px] font-black text-luxury-gray bg-white w-fit px-3 py-1 rounded-lg border border-cream-dark">
                         <Calendar size={12} className="text-gold" /> {booking.date} | {booking.time}
@@ -215,7 +241,7 @@ function PaymentContent() {
                   </div>
                   {booking.isRoundTrip && (
                     <div className="pt-2">
-                      <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest block mb-1">DÖNÜŞ ROTALAMASI</span>
+                      <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest block mb-1">{tStrings.retRoute}</span>
                       <span className="text-[13px] font-bold text-luxury-dark uppercase block leading-tight">{booking.returnPickup || booking.dropoff} ➔ {booking.returnDropoff || booking.pickup}</span>
                       <div className="flex items-center gap-2 mt-2 text-[10px] font-black text-luxury-gray bg-white w-fit px-3 py-1 rounded-lg border border-cream-dark">
                           <Calendar size={12} className="text-emerald-500" /> {booking.returnDate} | {booking.returnTime}
@@ -227,14 +253,14 @@ function PaymentContent() {
                 <div className="flex items-center gap-4 bg-white p-4 rounded-2xl border border-cream-dark shadow-sm">
                    <div className="w-10 h-10 bg-cream rounded-xl flex items-center justify-center text-gold"><Car size={20} /></div>
                    <div>
-                      <span className="text-[9px] font-black text-luxury-gray/50 uppercase tracking-widest block">VIP ARAÇ</span>
+                      <span className="text-[9px] font-black text-luxury-gray/50 uppercase tracking-widest block">{tStrings.vipCar}</span>
                       <span className="text-[11px] font-black text-luxury-dark uppercase italic">{booking.vehicle}</span>
                    </div>
                 </div>
               </div>
 
               <div className="pt-8 border-t border-cream-dark flex flex-col items-end">
-                <span className="text-[10px] font-black text-luxury-gray uppercase tracking-[0.3em] mb-2">TOPLAM TUTAR</span>
+                <span className="text-[10px] font-black text-luxury-gray uppercase tracking-[0.3em] mb-2">{tStrings.total}</span>
                 <span className="text-5xl md:text-6xl font-black text-luxury-dark tracking-tighter italic">
                   {booking.totalPrice}
                 </span>

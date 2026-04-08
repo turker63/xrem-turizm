@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, Mail, MapPin, Send, Search, ChevronDown, ArrowRight } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import { useLanguage } from '@/context/LanguageContext';
 
 const countryCodes = [
   { code: "+90", flag: "🇹🇷", label: "Turkey" },
@@ -84,6 +85,31 @@ export default function BookingForm() {
   const [selectedCountry, setSelectedCountry] = useState(countryCodes[0]);
   const [searchTerm, setSearchTerm] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { lang } = useLanguage();
+
+  const tStrings = {
+    title1: lang === 'en' ? "Contact &" : "İletişim &",
+    title2: lang === 'en' ? "Booking" : "Rezervasyon",
+    subtitle: lang === 'en' ? "Reach Us 24/7" : "Bize 7/24 Ulaşabilirsiniz",
+    formTitle: lang === 'en' ? "Quick Quote Form" : "Hızlı Teklif Formu",
+    name: lang === 'en' ? "Full Name *" : "Ad Soyad *",
+    phonePlaceholder: lang === 'en' ? "Phone Number *" : "Telefon Numarası *",
+    email: lang === 'en' ? "Email Address *" : "E-posta Adresi *",
+    from: lang === 'en' ? "From?" : "Nereden?",
+    to: lang === 'en' ? "To?" : "Nereye?",
+    details: lang === 'en' ? "Transfer Details (Flight No, Pax, etc...) *" : "Transfer Detayları (Uçuş No, Kişi Sayısı vb...) *",
+    submitBtn: lang === 'en' ? "CONTACT US" : "İLETİŞİME GEÇ",
+    searchCountry: lang === 'en' ? "Search country or code..." : "Ülke veya kod ara...",
+    opsCenter: lang === 'en' ? "Operations Center" : "Operasyon Merkezi",
+    supportLine: lang === 'en' ? "24/7 VIP Support Line" : "7/24 VIP Destek Hattı",
+    corpContact: lang === 'en' ? "Corporate Contact" : "Kurumsal İletişim",
+    waHeader: lang === 'en' ? "*HELLO, I WOULD LIKE A TRANSFER.*" : "*MERHABA, TRANSFER İSTİYORUM.*",
+    waName: lang === 'en' ? "Name:" : "İsim:",
+    waPhone: lang === 'en' ? "Phone:" : "Telefon:",
+    waFrom: lang === 'en' ? "From:" : "Nereden:",
+    waTo: lang === 'en' ? "To:" : "Nereye:",
+    waDetails: lang === 'en' ? "Details:" : "Detaylar:"
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -105,18 +131,18 @@ export default function BookingForm() {
     const formData = new FormData(e.currentTarget);
     const data = {
       fullname: formData.get("fullname"),
-      from: formData.get("from") || "Belirtilmedi",
-      to: formData.get("to") || "Belirtilmedi",
+      from: formData.get("from") || (lang === 'en' ? "Not Specified" : "Belirtilmedi"),
+      to: formData.get("to") || (lang === 'en' ? "Not Specified" : "Belirtilmedi"),
       details: formData.get("details"),
     };
 
-    const message = `*MERHABA, TRANSFER İSTİYORUM.*%0A` +
+    const message = `${tStrings.waHeader}%0A` +
       `--------------------------%0A` +
-      `👤 *İsim:* ${data.fullname}%0A` +
-      `📞 *Telefon:* ${selectedCountry.code} ${phone}%0A` +
-      `📍 *Nereden:* ${data.from}%0A` +
-      `🏁 *Nereye:* ${data.to}%0A` +
-      `📝 *Detaylar:* ${data.details}`;
+      `👤 *${tStrings.waName}* ${data.fullname}%0A` +
+      `📞 *${tStrings.waPhone}* ${selectedCountry.code} ${phone}%0A` +
+      `📍 *${tStrings.waFrom}* ${data.from}%0A` +
+      `🏁 *${tStrings.waTo}* ${data.to}%0A` +
+      `📝 *${tStrings.waDetails}* ${data.details}`;
 
     const whatsappUrl = `https://wa.me/905322855572?text=${message}`;
     window.open(whatsappUrl, "_blank");
@@ -133,10 +159,10 @@ export default function BookingForm() {
             viewport={{ once: true }}
             className="text-2xl md:text-4xl font-black uppercase tracking-tighter text-luxury-dark"
           >
-            İletişim & <span className="text-gold">Rezervasyon</span>
+            {tStrings.title1} <span className="text-gold">{tStrings.title2}</span>
           </motion.h3>
           <div className="h-1.5 w-20 bg-gold mx-auto mt-4 rounded-full"></div>
-          <p className="text-luxury-gray text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase mt-6 opacity-70">Bize 7/24 Ulaşabilirsiniz</p>
+          <p className="text-luxury-gray text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase mt-6 opacity-70">{tStrings.subtitle}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-start">
@@ -153,11 +179,11 @@ export default function BookingForm() {
               <span className="w-8 h-8 rounded-full bg-white flex items-center justify-center border border-cream-dark shadow-sm">
                 <Send size={14} className="text-gold" />
               </span> 
-              Hızlı Teklif Formu
+              {tStrings.formTitle}
             </h4>
             
             <form onSubmit={handleSubmit} className="space-y-4">
-              <input required name="fullname" type="text" placeholder="Ad Soyad *" className="w-full bg-white border border-cream-dark p-4 h-[56px] rounded-xl text-xs font-bold outline-none text-luxury-dark focus:border-gold transition-all uppercase tracking-wider" />
+              <input required name="fullname" type="text" placeholder={tStrings.name} className="w-full bg-white border border-cream-dark p-4 h-[56px] rounded-xl text-xs font-bold outline-none text-luxury-dark focus:border-gold transition-all uppercase tracking-wider" />
               
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="relative w-full md:w-[130px]" ref={dropdownRef}>
@@ -182,7 +208,7 @@ export default function BookingForm() {
                           <input 
                             autoFocus
                             type="text" 
-                            placeholder="Ülke veya kod ara..." 
+                            placeholder={tStrings.searchCountry}
                             className="bg-transparent border-none outline-none text-[11px] font-bold w-full uppercase"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
@@ -214,23 +240,22 @@ export default function BookingForm() {
                   type="tel" 
                   value={phone}
                   onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
-                  placeholder="Telefon Numarası *" 
+                  placeholder={tStrings.phonePlaceholder}
                   className="flex-1 bg-white border border-cream-dark p-4 h-[56px] rounded-xl text-xs font-bold outline-none text-luxury-dark focus:border-gold transition-all" 
                 />
               </div>
 
-              <input required name="email" type="email" placeholder="E-posta Adresi *" className="w-full bg-white border border-cream-dark p-4 h-[56px] rounded-xl text-xs font-bold outline-none text-luxury-dark focus:border-gold transition-all placeholder:text-luxury-gray/50" />
+              <input required name="email" type="email" placeholder={tStrings.email} className="w-full bg-white border border-cream-dark p-4 h-[56px] rounded-xl text-xs font-bold outline-none text-luxury-dark focus:border-gold transition-all placeholder:text-luxury-gray/50" />
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input name="from" type="text" placeholder="Nereden?" className="w-full bg-white border border-cream-dark p-4 h-[56px] rounded-xl text-xs font-bold outline-none text-luxury-dark focus:border-gold transition-all" />
-                <input name="to" type="text" placeholder="Nereye?" className="w-full bg-white border border-cream-dark p-4 h-[56px] rounded-xl text-xs font-bold outline-none text-luxury-dark focus:border-gold transition-all" />
+                <input name="from" type="text" placeholder={tStrings.from} className="w-full bg-white border border-cream-dark p-4 h-[56px] rounded-xl text-xs font-bold outline-none text-luxury-dark focus:border-gold transition-all" />
+                <input name="to" type="text" placeholder={tStrings.to} className="w-full bg-white border border-cream-dark p-4 h-[56px] rounded-xl text-xs font-bold outline-none text-luxury-dark focus:border-gold transition-all" />
               </div>
               
-              <textarea required name="details" placeholder="Transfer Detayları (Uçuş No, Kişi Sayısı vb...) *" rows={4} className="w-full bg-white border border-cream-dark p-4 rounded-xl text-xs font-bold outline-none text-luxury-dark focus:border-gold transition-all resize-none" />
+              <textarea required name="details" placeholder={tStrings.details} rows={4} className="w-full bg-white border border-cream-dark p-4 rounded-xl text-xs font-bold outline-none text-luxury-dark focus:border-gold transition-all resize-none" />
               
               <button type="submit" className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white font-black py-5 rounded-xl transition-all uppercase text-[12px] tracking-[0.2em] shadow-xl mt-4 flex items-center justify-center gap-2 active:scale-[0.98] relative overflow-hidden group/btn">
-                <span className="relative z-10 flex items-center gap-2"> İLETİŞİME GEÇ <ArrowRight className="w-4 h-4" /></span>
-                {/* YEŞİL PARLAMA EFEKTİ: Emerald-200 rengine çekildi */}
+                <span className="relative z-10 flex items-center gap-2"> {tStrings.submitBtn} <ArrowRight className="w-4 h-4" /></span>
                 <motion.div initial={{ x: "-100%" }} whileHover={{ x: "100%" }} transition={{ duration: 0.6, ease: "easeInOut" }} className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-100/40 to-transparent skew-x-[-25deg] z-5" />
               </button>
             </form>
@@ -243,7 +268,7 @@ export default function BookingForm() {
             className="flex flex-col gap-8 h-full"
           >
             <div className="bg-cream p-8 md:p-10 rounded-[2.5rem] border border-cream-dark shadow-sm h-full flex flex-col justify-center">
-              <h4 className="text-luxury-dark font-black mb-8 uppercase tracking-widest text-[11px] border-l-4 border-gold pl-4">Operasyon Merkezi</h4>
+              <h4 className="text-luxury-dark font-black mb-8 uppercase tracking-widest text-[11px] border-l-4 border-gold pl-4">{tStrings.opsCenter}</h4>
               <div className="space-y-6">
                 <a href="tel:+905322855572" className="group flex items-center gap-5 p-3 -ml-3 rounded-2xl hover:bg-white/30 transition-colors">
                   <div className="w-14 h-14 bg-white border border-cream-dark rounded-xl flex items-center justify-center group-hover:bg-gold group-hover:border-gold transition-all duration-300 shadow-sm text-gold group-hover:text-white">
@@ -251,7 +276,7 @@ export default function BookingForm() {
                   </div>
                   <div className="flex flex-col">
                     <span className="text-luxury-dark text-lg font-black tracking-tight">+90 532 285 5572</span>
-                    <span className="text-gold text-[10px] font-bold tracking-widest uppercase">7/24 VIP Destek Hattı</span>
+                    <span className="text-gold text-[10px] font-bold tracking-widest uppercase">{tStrings.supportLine}</span>
                   </div>
                 </a>
                 <a href="mailto:info@xremtransfer.com" className="group flex items-center gap-5 p-3 -ml-3 rounded-2xl hover:bg-white/30 transition-colors">
@@ -260,7 +285,7 @@ export default function BookingForm() {
                   </div>
                   <div className="flex flex-col">
                     <span className="text-luxury-dark text-md font-black tracking-tight">info@xremtransfer.com</span>
-                    <span className="text-luxury-gray/60 text-[10px] font-bold tracking-widest uppercase">Kurumsal İletişim</span>
+                    <span className="text-luxury-gray/60 text-[10px] font-bold tracking-widest uppercase">{tStrings.corpContact}</span>
                   </div>
                 </a>
                 <div className="group flex items-center gap-5 p-3 -ml-3 rounded-2xl">
@@ -268,7 +293,7 @@ export default function BookingForm() {
                     <MapPin size={24} />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-luxury-dark text-[12px] font-black uppercase tracking-wider mb-0.5">Antalya, Türkiye</span>
+                    <span className="text-luxury-dark text-[12px] font-black uppercase tracking-wider mb-0.5">Antalya, {lang === 'en' ? 'Turkey' : 'Türkiye'}</span>
                     <span className="text-luxury-gray text-[11px] leading-relaxed font-bold opacity-70">Güzeloba Mah. 2262 Sok No 25/102</span>
                   </div>
                 </div>

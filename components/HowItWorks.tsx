@@ -1,39 +1,39 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useLanguage } from '@/context/LanguageContext';
 
-const steps = [
-  {
-    id: 1,
-    title: "Hızlı Rezervasyon",
-    description: "Sistemimizden rotanızı, tarihinizi ve aracınızı saniyeler içinde seçip güvenle onaylayın.",
-    image: "/how-it-works/hizli-rezervasyon.jpeg", 
-  },
-  {
-    id: 2,
-    title: "VIP Karşılama",
-    description: "Uçuşunuzu takip eden şoförümüz, havalimanı çıkışında sizi isminize özel tabelayla bekler.",
-    image: "/how-it-works/karsilama.jpg",
-  },
-  {
-    id: 3,
-    title: "Premium Yolculuk",
-    description: "Lüks donanımlı araçlarımız ve ikramlarımız eşliğinde gideceğiniz yere konforla ulaşın.",
-    image: "/how-it-works/yolculuk.jpg",
-  },
-];
+const stepsData = {
+  tr: [
+    { id: 1, title: "Hızlı Rezervasyon", description: "Sistemimizden rotanızı, tarihinizi ve aracınızı saniyeler içinde seçip güvenle onaylayın.", image: "/how-it-works/hizli-rezervasyon.jpeg" },
+    { id: 2, title: "VIP Karşılama", description: "Uçuşunuzu takip eden şoförümüz, havalimanı çıkışında sizi isminize özel tabelayla bekler.", image: "/how-it-works/karsilama.jpg" },
+    { id: 3, title: "Premium Yolculuk", description: "Lüks donanımlı araçlarımız ve ikramlarımız eşliğinde gideceğiniz yere konforla ulaşın.", image: "/how-it-works/yolculuk.jpg" },
+  ],
+  en: [
+    { id: 1, title: "Quick Booking", description: "Select your route, date, and vehicle from our system in seconds and confirm securely.", image: "/how-it-works/hizli-rezervasyon.jpeg" },
+    { id: 2, title: "VIP Welcome", description: "Our driver tracks your flight and waits for you at the airport exit with a personalized sign.", image: "/how-it-works/karsilama.jpg" },
+    { id: 3, title: "Premium Journey", description: "Reach your destination in comfort accompanied by our luxury equipped vehicles and treats.", image: "/how-it-works/yolculuk.jpg" },
+  ]
+};
 
 export default function HowItWorks() {
+  const { lang } = useLanguage();
+  const currentSteps = lang === 'en' ? stepsData.en : stepsData.tr;
+  
+  const subtitle = lang === 'en' ? 'HOW DOES IT WORK?' : 'SÜREÇ NASIL İŞLER?';
+  const mainTitle1 = lang === 'en' ? 'Flawless Transfer' : '3 Basit Adımda';
+  const mainTitle2 = lang === 'en' ? 'In 3 Simple Steps' : 'Kusursuz Transfer';
+
   return (
     <section className="py-24 bg-cream-dark border-y border-cream overflow-hidden relative">
       <div className="max-w-7xl mx-auto px-4">
         
         <div className="text-center mb-20 md:mb-24">
           <p className="text-[10px] md:text-xs font-black text-luxury-gray/60 uppercase tracking-[0.4em] mb-4">
-            SÜREÇ NASIL İŞLER?
+            {subtitle}
           </p>
           <h2 className="text-2xl md:text-4xl font-black text-luxury-dark uppercase tracking-tighter">
-            3 Basit Adımda <span className="text-gold">Kusursuz Transfer</span>
+            {mainTitle1} <span className="text-gold">{mainTitle2}</span>
           </h2>
         </div>
 
@@ -54,7 +54,7 @@ export default function HowItWorks() {
             </svg>
           </div>
 
-          {steps.map((step, index) => (
+          {currentSteps.map((step, index) => (
             <motion.div
               key={step.id}
               initial={{ opacity: 0, y: 30 }}

@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useLanguage } from '@/context/LanguageContext';
 import { MapPin, Calendar, Users, ArrowRight, Star } from "lucide-react";
 
 export default function BookingWidget() {
   const router = useRouter();
+  const { lang } = useLanguage();
   const [bookingData, setBookingData] = useState({
     from: "",
     to: "",
@@ -14,8 +16,22 @@ export default function BookingWidget() {
     passengers: "1",
   });
 
+  const tStrings = {
+    pickup: lang === 'en' ? "PICKUP" : "BAŞLANGIÇ",
+    dropoff: lang === 'en' ? "DROPOFF" : "VARALACAK NOKTA",
+    date: lang === 'en' ? "TRANSFER DATE" : "TRANSFER TARİHİ",
+    selectLoc: lang === 'en' ? "SELECT LOCATION" : "LOKASYON SEÇİN",
+    hotelRegion: lang === 'en' ? "HOTEL OR REGION" : "OTEL VEYA BÖLGE",
+    ayt: lang === 'en' ? "ANTALYA AIRPORT (AYT)" : "ANTALYA HAVALİMANI (AYT)",
+    belek: lang === 'en' ? "BELEK REGION" : "BELEK BÖLGESİ",
+    kemer: lang === 'en' ? "KEMER REGION" : "KEMER BÖLGESİ",
+    side: lang === 'en' ? "SIDE / MANAVGAT" : "SİDE / MANAVGAT",
+    btnText: lang === 'en' ? "VIEW VEHICLES" : "ARAÇLARI GÖR",
+    badge1: lang === 'en' ? "Instant smooth VIP confirmation" : "Saniyeler içinde sarsıntısız VIP onay",
+    badge2: lang === 'en' ? "256+ active vehicles ready in seconds" : "256+ aktif araç saniyeler içinde hatta",
+  };
+
   const handleSearch = () => {
-    // Verileri URL'e ekleyerek araç seçim sayfasına saniyeler içinde süzül
     const params = new URLSearchParams(bookingData).toString();
     router.push(`/rezervasyon-yap?${params}`);
   };
@@ -33,15 +49,15 @@ export default function BookingWidget() {
           <div className="w-full lg:flex-1 bg-white/5 rounded-[1.8rem] p-4 flex items-center gap-4 group hover:bg-white/10 transition-all border border-transparent focus-within:border-gold/30">
             <MapPin className="text-gold" size={20} />
             <div className="flex flex-col flex-1">
-              <label className="text-[7px] font-black text-gray-500 uppercase tracking-widest italic">BAŞLANGIÇ</label>
+              <label className="text-[7px] font-black text-gray-500 uppercase tracking-widest italic">{tStrings.pickup}</label>
               <select 
                 className="bg-transparent text-white text-[11px] font-black uppercase outline-none appearance-none cursor-pointer"
                 onChange={(e) => setBookingData({...bookingData, from: e.target.value})}
               >
-                <option value="">LOKASYON SEÇİN</option>
-                <option value="ayt">ANTALYA HAVALİMANI (AYT)</option>
-                <option value="belek">BELEK BÖLGESİ</option>
-                <option value="kemer">KEMER BÖLGESİ</option>
+                <option value="">{tStrings.selectLoc}</option>
+                <option value="ayt">{tStrings.ayt}</option>
+                <option value="belek">{tStrings.belek}</option>
+                <option value="kemer">{tStrings.kemer}</option>
               </select>
             </div>
           </div>
@@ -52,15 +68,15 @@ export default function BookingWidget() {
           <div className="w-full lg:flex-1 bg-white/5 rounded-[1.8rem] p-4 flex items-center gap-4 group hover:bg-white/10 transition-all border border-transparent focus-within:border-gold/30">
             <MapPin className="text-red-500" size={20} />
             <div className="flex flex-col flex-1">
-              <label className="text-[7px] font-black text-gray-500 uppercase tracking-widest italic">VARALACAK NOKTA</label>
+              <label className="text-[7px] font-black text-gray-500 uppercase tracking-widest italic">{tStrings.dropoff}</label>
               <select 
                 className="bg-transparent text-white text-[11px] font-black uppercase outline-none appearance-none cursor-pointer"
                 onChange={(e) => setBookingData({...bookingData, to: e.target.value})}
               >
-                <option value="">OTEL VEYA BÖLGE</option>
-                <option value="ayt">ANTALYA HAVALİMANI (AYT)</option>
-                <option value="belek">BELEK BÖLGESİ</option>
-                <option value="side">SİDE / MANAVGAT</option>
+                <option value="">{tStrings.hotelRegion}</option>
+                <option value="ayt">{tStrings.ayt}</option>
+                <option value="belek">{tStrings.belek}</option>
+                <option value="side">{tStrings.side}</option>
               </select>
             </div>
           </div>
@@ -69,7 +85,7 @@ export default function BookingWidget() {
           <div className="w-full lg:w-48 bg-white/5 rounded-[1.8rem] p-4 flex items-center gap-4 group hover:bg-white/10 transition-all border border-transparent focus-within:border-gold/30">
             <Calendar className="text-gold" size={20} />
             <div className="flex flex-col flex-1">
-              <label className="text-[7px] font-black text-gray-500 uppercase tracking-widest italic">TRANSFER TARİHİ</label>
+              <label className="text-[7px] font-black text-gray-500 uppercase tracking-widest italic">{tStrings.date}</label>
               <input 
                 type="date" 
                 className="bg-transparent text-white text-[11px] font-black outline-none color-scheme-dark"
@@ -83,7 +99,7 @@ export default function BookingWidget() {
             onClick={handleSearch}
             className="w-full lg:w-auto bg-gold text-black px-10 py-6 rounded-[1.8rem] text-[10px] font-black uppercase italic tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(212,175,55,0.2)]"
           >
-            ARAÇLARI GÖR
+            {tStrings.btnText}
           </button>
 
         </div>
@@ -92,10 +108,10 @@ export default function BookingWidget() {
         <div className="mt-4 px-6 flex items-center justify-between text-[7px] font-black text-gray-600 uppercase tracking-[0.3em] italic">
           <div className="flex items-center gap-2">
             <Star size={8} className="text-gold" />
-            <span>Saniyeler içinde sarsıntısız VIP onay</span>
+            <span>{tStrings.badge1}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span>256+ aktif araç saniyeler içinde hatta</span>
+            <span>{tStrings.badge2}</span>
           </div>
         </div>
       </div>

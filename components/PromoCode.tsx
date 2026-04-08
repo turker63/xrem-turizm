@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from '@/context/LanguageContext';
 import { Ticket, CheckCircle2, XCircle } from "lucide-react";
 
 interface PromoCodeProps {
@@ -12,6 +13,14 @@ interface PromoCodeProps {
 export default function PromoCode({ basePrice, onDiscountApplied }: PromoCodeProps) {
   const [promoCode, setPromoCode] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const { lang } = useLanguage();
+
+  const tStrings = {
+    placeholder: lang === 'en' ? "PROMO CODE..." : "İNDİRİM KODU...",
+    apply: lang === 'en' ? "APPLY" : "UYGULA",
+    success: lang === 'en' ? "✓ CODE APPLIED" : "✓ KOD UYGULANDI",
+    error: lang === 'en' ? "✕ INVALID CODE" : "✕ GEÇERSİZ KOD",
+  };
 
   const VALID_CODES: Record<string, number> = {
     "XREM10": 0.10, // %10
@@ -27,7 +36,7 @@ export default function PromoCode({ basePrice, onDiscountApplied }: PromoCodePro
         const discountValue = VALID_CODES[code];
         const amount = discountValue < 1 ? basePrice * discountValue : discountValue;
         
-        onDiscountApplied(amount); // Ana sayfaya indirimi saniyeler içinde bildir
+        onDiscountApplied(amount); 
         setStatus("success");
       } else {
         setStatus("error");
@@ -43,7 +52,7 @@ export default function PromoCode({ basePrice, onDiscountApplied }: PromoCodePro
           type="text"
           value={promoCode}
           onChange={(e) => { setPromoCode(e.target.value); setStatus("idle"); }}
-          placeholder="İNDİRİM KODU..."
+          placeholder={tStrings.placeholder}
           className="bg-black/40 border border-white/10 rounded-xl px-4 py-2 text-[10px] font-mono uppercase tracking-widest text-white flex-1 focus:border-gold/50 outline-none"
         />
         <button
@@ -51,12 +60,12 @@ export default function PromoCode({ basePrice, onDiscountApplied }: PromoCodePro
           disabled={status === "loading" || status === "success"}
           className="bg-gold text-black px-4 py-2 rounded-xl text-[10px] font-black uppercase italic hover:scale-105 transition-all disabled:opacity-50"
         >
-          {status === "loading" ? "..." : "UYGULA"}
+          {status === "loading" ? "..." : tStrings.apply}
         </button>
       </div>
       <AnimatePresence>
-        {status === "success" && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-green-500 text-[9px] font-bold mt-2 italic">✓ KOD UYGULANDI</motion.p>}
-        {status === "error" && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-red-500 text-[9px] font-bold mt-2 italic">✕ GEÇERSİZ KOD</motion.p>}
+        {status === "success" && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-green-500 text-[9px] font-bold mt-2 italic">{tStrings.success}</motion.p>}
+        {status === "error" && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-red-500 text-[9px] font-bold mt-2 italic">{tStrings.error}</motion.p>}
       </AnimatePresence>
     </div>
   );

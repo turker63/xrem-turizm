@@ -2,14 +2,23 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
+import { useLanguage } from '@/context/LanguageContext';
 import { Users, Car, MapPin, Star } from "lucide-react";
 
-const stats = [
-  { id: 1, label: "Mutlu Müşteri", value: 15000, suffix: "+", icon: Users },
-  { id: 2, label: "Yıllık Transfer", value: 8500, suffix: "+", icon: Car },
-  { id: 3, label: "Desteklenen Rota", value: 120, suffix: "+", icon: MapPin },
-  { id: 4, label: "Müşteri Puanı", value: 4.9, suffix: "/5", icon: Star },
-];
+const statsData = {
+  tr: [
+    { id: 1, label: "Mutlu Müşteri", value: 15000, suffix: "+", icon: Users },
+    { id: 2, label: "Yıllık Transfer", value: 8500, suffix: "+", icon: Car },
+    { id: 3, label: "Desteklenen Rota", value: 120, suffix: "+", icon: MapPin },
+    { id: 4, label: "Müşteri Puanı", value: 4.9, suffix: "/5", icon: Star },
+  ],
+  en: [
+    { id: 1, label: "Happy Clients", value: 15000, suffix: "+", icon: Users },
+    { id: 2, label: "Annual Transfers", value: 8500, suffix: "+", icon: Car },
+    { id: 3, label: "Supported Routes", value: 120, suffix: "+", icon: MapPin },
+    { id: 4, label: "Customer Rating", value: 4.9, suffix: "/5", icon: Star },
+  ]
+};
 
 const Counter = ({ value, suffix }: { value: number; suffix: string }) => {
   const [count, setCount] = useState(0);
@@ -40,13 +49,16 @@ const Counter = ({ value, suffix }: { value: number; suffix: string }) => {
 };
 
 export default function Stats() {
+  const { lang } = useLanguage();
+  const currentStats = lang === 'en' ? statsData.en : statsData.tr;
+
   return (
     <section className="py-20 bg-cream-dark border-y border-cream overflow-hidden relative">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(191,149,63,0.03)_0%,transparent_70%)] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 relative z-10">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
-          {stats.map((stat) => (
+          {currentStats.map((stat) => (
             <motion.div
               key={stat.id}
               initial={{ opacity: 0, y: 20 }}

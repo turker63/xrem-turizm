@@ -4,72 +4,31 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useLanguage } from '@/context/LanguageContext';
+
+const slidesData = {
+  tr: [
+    { id: 1, image: "/hizmetler/havalimani-transfer.jpg", subtitle: "XREM PREMIUM", title: "HAVALİMANI", titleAccent: "VIP TRANSFER", desc: "Havalimanında isme özel VIP karşılama ve otelinize kadar sarsıntısız, güvenli lüks transfer deneyimi.", btnText: "REZERVASYON YAP", btnLink: "/arac-secimi?dep=Antalya Havalimanı (AYT)" },
+    { id: 2, image: "/xrem-aqua.jpg", subtitle: "MAVİLİKLERE AÇILIN", title: "VIP YAT", titleAccent: "KİRALAMA", desc: "Akdeniz'in en güzel koylarında, sadece size ve sevdiklerinize özel, beş yıldızlı otel konforunda unutulmaz bir gün.", btnText: "YATLARIMIZI İNCELE", btnLink: "/hizmetler/vip-yat-kiralama" },
+    { id: 3, image: "/hizmetler/vip-transfer.jpeg", subtitle: "LÜKS VE KONFOR", title: "ÖZEL VIP", titleAccent: "TRANSFER", desc: "Size özel tasarlanmış VIP araçlarımızla dilediğiniz her lokasyona ayrıcalıklı ve konforlu seyahat ayrıcalığı.", btnText: "DETAYLARI İNCELE", btnLink: "/hizmetler/vip-transfer" },
+    { id: 4, image: "/hizmetler/soforlu-arac-kiralama.jpeg", subtitle: "SINIR TANIMAYAN KONFOR", title: "ŞOFÖRLÜ ARAÇ", titleAccent: "TAHSİSİ", desc: "Günlük veya saatlik tahsis edilen şoförlü lüks araçlarla şehir içi ve şehir dışı prestijli ulaşım çözümleri.", btnText: "TEKLİF ALIN", btnLink: "/hizmetler/soforlu-arac-kiralama" },
+    { id: 5, image: "/hizmetler/kongre-fuar-tasimaciligi.jpg", subtitle: "KURUMSAL ÇÖZÜMLER", title: "KONGRE VE FUAR", titleAccent: "TAŞIMACILIĞI", desc: "Kurumsal etkinlikleriniz ve davetleriniz için profesyonel, zamanında ve kusursuz planlanmış ulaşım çözümleri.", btnText: "İLETİŞİME GEÇ", btnLink: "/hizmetler/kongre-fuar-tasimaciligi" },
+    { id: 6, image: "/hizmetler/tur-tasima.jpeg", subtitle: "KEŞFETMEYE HAZIR OLUN", title: "ÖZEL TUR", titleAccent: "TAŞIMACILIĞI", desc: "Bölgenin tarihi ve turistik lokasyonlarına, tamamen size özel hazırlanan rotalarla güvenli ve lüks gezi.", btnText: "ROTALARI İNCELE", btnLink: "/hizmetler/ozel-tur-tasima" }
+  ],
+  en: [
+    { id: 1, image: "/hizmetler/havalimani-transfer.jpg", subtitle: "XREM PREMIUM", title: "AIRPORT", titleAccent: "VIP TRANSFER", desc: "Personalized VIP welcome at the airport and a smooth, safe luxury transfer experience to your hotel.", btnText: "BOOK NOW", btnLink: "/arac-secimi?dep=Antalya Havalimanı (AYT)" },
+    { id: 2, image: "/xrem-aqua.jpg", subtitle: "SAIL INTO THE BLUE", title: "VIP YACHT", titleAccent: "CHARTER", desc: "An unforgettable day in the most beautiful bays of the Mediterranean, exclusive to you and your loved ones, with five-star hotel comfort.", btnText: "VIEW YACHTS", btnLink: "/hizmetler/vip-yat-kiralama" },
+    { id: 3, image: "/hizmetler/vip-transfer.jpeg", subtitle: "LUXURY AND COMFORT", title: "PRIVATE VIP", titleAccent: "TRANSFER", desc: "Privileged and comfortable travel to any location you desire with our custom-designed VIP vehicles.", btnText: "VIEW DETAILS", btnLink: "/hizmetler/vip-transfer" },
+    { id: 4, image: "/hizmetler/soforlu-arac-kiralama.jpeg", subtitle: "COMFORT WITHOUT BORDERS", title: "CHAUFFEURED", titleAccent: "CAR RENTAL", desc: "Prestigious urban and intercity transportation solutions with daily or hourly allocated luxury vehicles with drivers.", btnText: "GET A QUOTE", btnLink: "/hizmetler/soforlu-arac-kiralama" },
+    { id: 5, image: "/hizmetler/kongre-fuar-tasimaciligi.jpg", subtitle: "CORPORATE SOLUTIONS", title: "CONGRESS & FAIR", titleAccent: "TRANSPORTATION", desc: "Professional, timely, and flawlessly planned transportation solutions for your corporate events and invitations.", btnText: "CONTACT US", btnLink: "/hizmetler/kongre-fuar-tasimaciligi" },
+    { id: 6, image: "/hizmetler/tur-tasima.jpeg", subtitle: "GET READY TO EXPLORE", title: "PRIVATE TOUR", titleAccent: "TRANSPORTATION", desc: "Safe and luxury trips to the historical and tourist locations of the region with routes prepared exclusively for you.", btnText: "VIEW ROUTES", btnLink: "/hizmetler/ozel-tur-tasima" }
+  ]
+};
 
 export default function HeroSlider() {
   const [current, setCurrent] = useState(0);
-
-  const slides = [
-    {
-      id: 1,
-      image: "/hizmetler/havalimani-transfer.jpg",
-      subtitle: "XREM PREMIUM",
-      title: "HAVALİMANI",
-      titleAccent: "VIP TRANSFER",
-      desc: "Havalimanında isme özel VIP karşılama ve otelinize kadar sarsıntısız, güvenli lüks transfer deneyimi.",
-      btnText: "REZERVASYON YAP",
-      btnLink: "/arac-secimi?dep=Antalya Havalimanı (AYT)"
-    },
-    {
-      id: 2,
-      image: "/xrem-aqua.jpg",
-      subtitle: "MAVİLİKLERE AÇILIN",
-      title: "VIP YAT",
-      titleAccent: "KİRALAMA",
-      desc: "Akdeniz'in en güzel koylarında, sadece size ve sevdiklerinize özel, beş yıldızlı otel konforunda unutulmaz bir gün.",
-      btnText: "YATLARIMIZI İNCELE",
-      btnLink: "/hizmetler/vip-yat-kiralama"
-    },
-    {
-      id: 3,
-      image: "/hizmetler/vip-transfer.jpeg",
-      subtitle: "LÜKS VE KONFOR",
-      title: "ÖZEL VIP",
-      titleAccent: "TRANSFER",
-      desc: "Size özel tasarlanmış VIP araçlarımızla dilediğiniz her lokasyona ayrıcalıklı ve konforlu seyahat ayrıcalığı.",
-      btnText: "DETAYLARI İNCELE",
-      btnLink: "/hizmetler/vip-transfer"
-    },
-    {
-      id: 4,
-      image: "/hizmetler/soforlu-arac-kiralama.jpeg",
-      subtitle: "SINIR TANIMAYAN KONFOR",
-      title: "ŞOFÖRLÜ ARAÇ",
-      titleAccent: "TAHSİSİ",
-      desc: "Günlük veya saatlik tahsis edilen şoförlü lüks araçlarla şehir içi ve şehir dışı prestijli ulaşım çözümleri.",
-      btnText: "TEKLİF ALIN",
-      btnLink: "/hizmetler/soforlu-arac-kiralama"
-    },
-    {
-      id: 5,
-      image: "/hizmetler/kongre-fuar-tasimaciligi.jpg",
-      subtitle: "KURUMSAL ÇÖZÜMLER",
-      title: "KONGRE VE FUAR",
-      titleAccent: "TAŞIMACILIĞI",
-      desc: "Kurumsal etkinlikleriniz ve davetleriniz için profesyonel, zamanında ve kusursuz planlanmış ulaşım çözümleri.",
-      btnText: "İLETİŞİME GEÇ",
-      btnLink: "/hizmetler/kongre-fuar-tasimaciligi"
-    },
-    {
-      id: 6,
-      image: "/hizmetler/tur-tasima.jpeg",
-      subtitle: "KEŞFETMEYE HAZIR OLUN",
-      title: "ÖZEL TUR",
-      titleAccent: "TAŞIMACILIĞI",
-      desc: "Bölgenin tarihi ve turistik lokasyonlarına, tamamen size özel hazırlanan rotalarla güvenli ve lüks gezi.",
-      btnText: "ROTALARI İNCELE",
-      btnLink: "/hizmetler/ozel-tur-tasima"
-    }
-  ];
+  const { lang } = useLanguage();
+  const slides = lang === 'en' ? slidesData.en : slidesData.tr;
 
   useEffect(() => {
     const timer = setInterval(() => {

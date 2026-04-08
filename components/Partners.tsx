@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useLanguage } from '@/context/LanguageContext';
 
 const partners = [
   { id: 1, name: "CRYSTAL HOTEL", src: "/partners/crystal-hotels.png", url: "https://www.crystalhotels.com.tr" },
@@ -11,15 +12,18 @@ const partners = [
 ];
 
 export default function Partners() {
+  const { lang } = useLanguage();
+  const title = lang === 'en' ? "Our Corporate Partners & References" : "Kurumsal İş Ortaklarımız & Referanslarımız";
+  const linkTitle = lang === 'en' ? "Go to Website" : "Web Sitesine Git";
+
   return (
     <section className="py-16 md:py-24 bg-cream-dark border-t border-cream overflow-hidden relative z-10">
       <div className="max-w-7xl mx-auto px-4">
         
         <p className="text-center text-[10px] md:text-xs font-black text-luxury-gray/70 uppercase tracking-[0.4em] mb-10 md:mb-14">
-          Kurumsal İş Ortaklarımız & Referanslarımız
+          {title}
         </p>
 
-        {/* ✅ Aralıklar daraltıldı (gap-4 md:gap-6) ki yan yana daha çok kutu sığsın */}
         <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6 lg:gap-8">
           {partners.map((partner) => (
             <motion.div
@@ -33,12 +37,7 @@ export default function Partners() {
                 href={partner.url} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                title={`${partner.name} Web Sitesine Git`}
-                /* ✅ KUTU BOYUTLARI KÜÇÜLTÜLDÜ: 
-                   - w-32 h-20 (Mobil için çok zarif boyutlar)
-                   - md:w-40 md:h-24 (Tablet/PC için ideal)
-                   - padding değerleri px-4 py-3 olarak kısıldı 
-                */
+                title={`${partner.name} - ${linkTitle}`}
                 className="group relative flex items-center justify-center px-4 py-3 md:px-6 md:py-4 bg-white rounded-3xl border border-white shadow-sm hover:shadow-[0_15px_30px_rgba(191,149,63,0.12)] hover:border-gold/20 hover:-translate-y-1.5 transition-all duration-500 outline-none w-32 h-20 md:w-40 md:h-24 lg:w-48 lg:h-28"
               >
                 <img 

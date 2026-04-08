@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState } from 'react';
 
 const translations = {
   tr: {
-    // NAVBAR
+    
     home: "ANA SAYFA",
     fleet: "FİLOMUZ",
     services: "HİZMETLER",
@@ -12,7 +12,7 @@ const translations = {
     contact: "İLETİŞİM",
     sss: "SSS",
 
-    // HERO & SEARCH FORM
+    
     tagline: "PREMİUM TRANSFER DENEYİMİ",
     oneWay: "Tek Yön",
     roundTrip: "Gidiş - Dönüş",
@@ -27,7 +27,7 @@ const translations = {
     adult: "Yetişkin",
     child: "Çocuk",
 
-    // AUTH (Üyelik & Giriş) - Yeni Eklenenler
+    
     loginTitle: "ÜYE GİRİŞİ",
     registerTitle: "YENİ KAYIT",
     email: "E-POSTA ADRESİ",
@@ -43,10 +43,10 @@ const translations = {
     errorEmail: "Lütfen geçerli bir e-posta girin.",
     errorPassword: "Şifre en az 6 karakter olmalıdır.",
 
-    // SSS (Sıkça Sorulan Sorular)
+    
     sssTitle: "Sıkça Sorulan Sorular",
 
-    // FİLOMUZ (Fleet)
+    
     fleetTitle: "ÖZEL VİP FİLOMUZ",
     fleetSub: "Konfor ve Güvenliğin Zirvesinde Yolculuk",
     capacity: "Kapasite",
@@ -54,9 +54,52 @@ const translations = {
     wifi: "Ücretsiz Wi-Fi",
     drinks: "Soğuk İçecekler",
     bookNow: "Hemen Rezervasyon Yap",
+
+    departureLabel: "(Gidiş)",
+    returnLabel: "(Dönüş)",
+    returnPickupPlaceholder: "Dönüş Alış Noktası",
+    returnDropoffPlaceholder: "Dönüş Varış Noktası",
+    select: "Seçiniz",
+    returnDate: "DÖNÜŞ TARİHİ",
+    timeLabel: "SAAT",
+
+    
+viewAll: "Tümünü Gör",
+readMore: "Devamını Oku",
+contactUs: "Bize Ulaşın",
+whatsappSupport: "WhatsApp Destek",
+
+
+servicesTitle: "Hizmetlerimiz",
+servicesSubtitle: "Size Özel Premium Transfer Çözümleri",
+featuresTitle: "Neden Bizi Seçmelisiniz?",
+featuresSubtitle: "Sizi özel hissettirecek ayrıcalıklarımız",
+statsTitle: "Rakamlarla Biz",
+howItWorksTitle: "Nasıl Çalışır?",
+howItWorksSubtitle: "3 Basit Adımda Transferinizi Planlayın",
+faqTitle: "Sıkça Sorulan Sorular",
+faqSubtitle: "Aklınıza takılan her şeyin cevabı burada",
+testimonialsTitle: "Müşteri Yorumları",
+promoTitle: "Özel İndirimler",
+
+
+footerAboutTitle: "Hakkımızda",
+footerLinksTitle: "Hızlı Linkler",
+footerContactTitle: "İletişim",
+rightsReserved: "Tüm Hakları Saklıdır.",
+
+corporate: "Kurumsal",
+policies: "Politikalar",
+operation: "7/24 Operasyon",
+footerRights: "TÜM HAKLARI SAKLIDIR.",
+securePayment: "256-BIT SSL GÜVENLİ ÖDEME SİSTEMİ",
+faqTitle1: "MERAK",
+faqTitle2: "EDİLENLER",
+faqSubtitle: "Aklınızdaki Tüm Soruların Cevapları",
+
   },
   en: {
-    // NAVBAR
+    
     home: "HOME",
     fleet: "FLEET",
     services: "SERVICES",
@@ -64,7 +107,7 @@ const translations = {
     contact: "CONTACT",
     sss: "FAQ",
 
-    // HERO & SEARCH TABLE
+    
     tagline: "PREMIUM TRANSFER EXPERIENCE",
     oneWay: "One Way",
     roundTrip: "Round Trip",
@@ -79,7 +122,7 @@ const translations = {
     adult: "Adult",
     child: "Child",
 
-    // AUTH (Login & Register) - Added
+    
     loginTitle: "USER LOGIN",
     registerTitle: "REGISTER",
     email: "EMAIL ADDRESS",
@@ -95,10 +138,10 @@ const translations = {
     errorEmail: "Please enter a valid email.",
     errorPassword: "Password must be at least 6 characters.",
 
-    // FAQ
+    
     sssTitle: "Frequently Asked Questions",
 
-    // FLEET
+    
     fleetTitle: "OUR EXCLUSIVE VIP FLEET",
     fleetSub: "Journey at the Peak of Comfort and Safety",
     capacity: "Capacity",
@@ -106,6 +149,48 @@ const translations = {
     wifi: "Free Wi-Fi",
     drinks: "Cold Drinks",
     bookNow: "Book Now",
+
+    departureLabel: "(Departure)",
+    returnLabel: "(Return)",
+    returnPickupPlaceholder: "Return Pickup Location",
+    returnDropoffPlaceholder: "Return Dropoff Location",
+    select: "Select",
+    returnDate: "RETURN DATE",
+    timeLabel: "TIME",
+
+
+viewAll: "View All",
+readMore: "Read More",
+contactUs: "Contact Us",
+whatsappSupport: "WhatsApp Support",
+
+
+servicesTitle: "Our Services",
+servicesSubtitle: "Premium Transfer Solutions Tailored For You",
+featuresTitle: "Why Choose Us?",
+featuresSubtitle: "Privileges that make you feel special",
+statsTitle: "Us in Numbers",
+howItWorksTitle: "How It Works?",
+howItWorksSubtitle: "Plan Your Transfer in 3 Simple Steps",
+faqTitle: "Frequently Asked Questions",
+faqSubtitle: "Answers to all your questions are here",
+testimonialsTitle: "Testimonials",
+promoTitle: "Special Offers",
+
+
+footerAboutTitle: "About Us",
+footerLinksTitle: "Quick Links",
+footerContactTitle: "Contact",
+rightsReserved: "All Rights Reserved.",
+
+corporate: "Corporate",
+policies: "Policies",
+operation: "24/7 Operation",
+footerRights: "ALL RIGHTS RESERVED.",
+securePayment: "256-BIT SSL SECURE PAYMENT SYSTEM",
+faqTitle1: "FREQUENTLY",
+faqTitle2: "ASKED QUESTIONS",
+faqSubtitle: "Answers to All Your Questions",
   }
 };
 

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useState, useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { useRouter, useSearchParams, usePathname } from "next/navigation"; 
 import { supabase } from "@/lib/supabase"; 
+import { useLanguage } from '@/context/LanguageContext';
 import { Users, Briefcase, CheckCircle2, ChevronRight, Loader2 } from "lucide-react";
 
 const VehicleList = forwardRef((props: any, ref) => {
@@ -11,6 +12,7 @@ const VehicleList = forwardRef((props: any, ref) => {
   const searchParams = useSearchParams();
   const pathname = usePathname(); 
   const sliderRef = useRef<HTMLDivElement>(null);
+  const { lang } = useLanguage();
 
   const [vehicles, setVehicles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,6 +29,31 @@ const VehicleList = forwardRef((props: any, ref) => {
   const [dragDistance, setDragDistance] = useState(0);
 
   const isSelectionPage = pathname === "/arac-secimi";
+
+  // Çeviri Metinleri
+  const tStrings = {
+    alertMsg: lang === 'en' ? "Please select your Departure and Arrival points completely before proceeding to the booking step." : "Lütfen rezervasyon adımına geçmeden önce Kalkış ve Varış noktalarınızı eksiksiz seçiniz.",
+    updating: lang === 'en' ? "Updating Price..." : "Fiyat Güncelleniyor...",
+    vipOption: lang === 'en' ? "VIP OPTION" : "VIP SEÇENEK",
+    defaultDesc: lang === 'en' ? "Premium equipment, spacious luggage capacity, and comfortable seats." : "Premium donanım, geniş bagaj hacmi ve konforlu koltuklar.",
+    pax: lang === 'en' ? "Pax" : "Yolcu",
+    luggage: lang === 'en' ? "Luggage" : "Valiz",
+    freeCancel: lang === 'en' ? "Free Cancellation" : "Ücretsiz İptal",
+    askPrice: lang === 'en' ? "ASK PRICE" : "FİYAT SOR",
+    totalPkg: lang === 'en' ? "TOTAL PACKAGE PRICE" : "TOPLAM PAKET FİYATI",
+    carPrice: lang === 'en' ? "VEHICLE PRICE" : "ARAÇ FİYATI",
+    waitBtn: lang === 'en' ? "WAIT" : "BEKLEYİN",
+    selectBtn: lang === 'en' ? "SELECT" : "SEÇ",
+    fleet1: lang === 'en' ? "OUR LUXURY" : "LÜKS",
+    fleet2: lang === 'en' ? "FLEET" : "FİLOMUZ",
+    sliderPax: lang === 'en' ? "PAX" : "KİŞİ",
+    sliderLuggage: lang === 'en' ? "LUGGAGE" : "BAGAJ",
+    getQuote: lang === 'en' ? "GET QUOTE!" : "FİYAT AL!",
+    startingFrom: lang === 'en' ? "Starting From" : "Başlayan Fiyatlar",
+    waMsg1: lang === 'en' ? "Hello, I would like to get a quote for the " : "Merhaba, ",
+    waMsg2: lang === 'en' ? " vehicle." : " aracı için fiyat almak istiyorum.",
+    waMsgInfo: lang === 'en' ? " vehicle." : " aracı için bilgi ve fiyat almak istiyorum."
+  };
 
   const fetchPrices = async (targetDropoff?: string, targetPickup?: string) => {
     setIsSyncing(true);
@@ -171,7 +198,7 @@ const VehicleList = forwardRef((props: any, ref) => {
     const dep = searchParams.get("dep");
     const arr = searchParams.get("arr");
     if (!dep || !arr) {
-      alert("Lütfen rezervasyon adımına geçmeden önce Kalkış ve Varış noktalarınızı eksiksiz seçiniz.");
+      alert(tStrings.alertMsg);
       return;
     }
     const finalPrice = calculateTotal(vehicle.name);
@@ -198,7 +225,7 @@ const VehicleList = forwardRef((props: any, ref) => {
             <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} key={index} className="bg-cream border border-cream-dark rounded-xl p-4 md:p-6 flex flex-col md:flex-row items-center gap-6 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
               {isSyncing && (
                 <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] z-50 flex items-center justify-center font-black text-gold text-[10px] tracking-widest uppercase italic">
-                  <Loader2 className="animate-spin mr-2" size={16} /> Fiyat Güncelleniyor...
+                  <Loader2 className="animate-spin mr-2" size={16} /> {tStrings.updating}
                 </div>
               )}
               <div className="w-full md:w-1/4 flex justify-center items-center p-2">
@@ -206,29 +233,29 @@ const VehicleList = forwardRef((props: any, ref) => {
               </div>
               <div className="flex-1 w-full flex flex-col justify-center">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="bg-gold/10 text-gold text-[9px] font-black px-2 py-0.5 rounded uppercase">VIP SEÇENEK</span>
+                  <span className="bg-gold/10 text-gold text-[9px] font-black px-2 py-0.5 rounded uppercase">{tStrings.vipOption}</span>
                   <h4 className="text-lg md:text-xl font-bold text-luxury-dark uppercase tracking-tight">{v.name}</h4>
                 </div>
-                <p className="text-[11px] text-luxury-gray font-medium mb-4">{v.description || "Premium donanım, geniş bagaj hacmi ve konforlu koltuklar."}</p>
+                <p className="text-[11px] text-luxury-gray font-medium mb-4">{v.description || tStrings.defaultDesc}</p>
                 <div className="flex flex-wrap gap-4 text-[11px] font-bold text-luxury-gray">
-                  <span className="flex items-center gap-1.5"><Users size={14} className="text-gold" /> {v.capacity} Yolcu</span>
-                  <span className="flex items-center gap-1.5"><Briefcase size={14} className="text-gold" /> {v.luggage} Valiz</span>
-                  <span className="flex items-center gap-1.5 text-emerald-600"><CheckCircle2 size={14} /> Ücretsiz İptal</span>
+                  <span className="flex items-center gap-1.5"><Users size={14} className="text-gold" /> {v.capacity} {tStrings.pax}</span>
+                  <span className="flex items-center gap-1.5"><Briefcase size={14} className="text-gold" /> {v.luggage} {tStrings.luggage}</span>
+                  <span className="flex items-center gap-1.5 text-emerald-600"><CheckCircle2 size={14} /> {tStrings.freeCancel}</span>
                 </div>
               </div>
               <div className="w-full md:w-auto flex flex-col items-center md:items-end md:border-l border-cream-dark md:pl-8 min-w-[180px]">
                 {v.contact_for_price ? (
-                  <button onClick={() => window.open(`https://wa.me/905322855572?text=Merhaba, ${v.name} aracı için fiyat almak istiyorum.`, "_blank")} className="w-full bg-[#25D366] text-white font-bold px-6 py-3 rounded-lg uppercase text-[11px] tracking-wide hover:bg-green-600 transition-all">FİYAT SOR</button>
+                  <button onClick={() => window.open(`https://wa.me/905322855572?text=${tStrings.waMsg1}${v.name}${tStrings.waMsg2}`, "_blank")} className="w-full bg-[#25D366] text-white font-bold px-6 py-3 rounded-lg uppercase text-[11px] tracking-wide hover:bg-green-600 transition-all">{tStrings.askPrice}</button>
                 ) : (
                   <>
-                    <div className="text-luxury-gray text-[10px] font-bold uppercase mb-1 opacity-60">{isRoundTrip ? 'TOPLAM PAKET FİYATI' : 'ARAÇ FİYATI'}</div>
+                    <div className="text-luxury-gray text-[10px] font-bold uppercase mb-1 opacity-60">{isRoundTrip ? tStrings.totalPkg : tStrings.carPrice}</div>
                     <div className="text-3xl font-black text-luxury-dark mb-4">€{isSyncing ? "---" : (carPrice || "---")}</div>
                     <button 
                       disabled={isSyncing}
                       onClick={() => handleSelect(v)} 
                       className={`w-full font-bold px-10 py-3 rounded-lg transition-all uppercase text-[12px] tracking-widest flex items-center justify-center gap-2 ${isSyncing ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-gold hover:bg-luxury-dark text-white'}`}
                     >
-                      {isSyncing ? 'BEKLEYİN' : 'SEÇ'} <ChevronRight size={16} />
+                      {isSyncing ? tStrings.waitBtn : tStrings.selectBtn} <ChevronRight size={16} />
                     </button>
                   </>
                 )}
@@ -245,7 +272,7 @@ const VehicleList = forwardRef((props: any, ref) => {
   return (
     <section id="vehicles" className="w-full py-20 bg-cream-dark relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 mb-10">
-        <h3 className="text-2xl md:text-3xl font-black text-luxury-dark uppercase tracking-tighter">LÜKS <span className="text-gold">FİLOMUZ</span><div className="h-1.5 w-16 bg-gold mt-2 rounded-full"></div></h3>
+        <h3 className="text-2xl md:text-3xl font-black text-luxury-dark uppercase tracking-tighter">{tStrings.fleet1} <span className="text-gold">{tStrings.fleet2}</span><div className="h-1.5 w-16 bg-gold mt-2 rounded-full"></div></h3>
       </div>
       <div ref={sliderRef} className="flex overflow-x-auto cursor-grab active:cursor-grabbing relative z-20 px-4" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }} onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => { setIsPaused(false); setIsDragging(false); }} onMouseDown={handleMouseDown} onMouseUp={() => setIsDragging(false)} onMouseMove={handleMouseMove} onTouchStart={() => { setIsPaused(true); setIsDragging(true); setDragDistance(0); }} onTouchEnd={() => { setIsPaused(false); setIsDragging(false); }}>
         <style dangerouslySetInnerHTML={{__html: `div::-webkit-scrollbar { display: none; }`}} />
@@ -259,15 +286,15 @@ const VehicleList = forwardRef((props: any, ref) => {
                 </div>
                 <h4 className="text-xl font-bold text-luxury-dark uppercase mb-4 tracking-tight group-hover:text-gold transition-colors">{v.name}</h4>
                 <div className="flex justify-between items-center text-[12px] font-bold text-luxury-gray uppercase bg-cream-dark/30 p-3 rounded-lg border border-cream-dark">
-                  <span className="flex items-center gap-1.5"><Users size={16} className="text-gold"/> {v.capacity} KİŞİ </span>
-                  <span className="flex items-center gap-1.5"><Briefcase size={16} className="text-gold"/> {v.luggage} BAGAJ </span>
+                  <span className="flex items-center gap-1.5"><Users size={16} className="text-gold"/> {v.capacity} {tStrings.sliderPax} </span>
+                  <span className="flex items-center gap-1.5"><Briefcase size={16} className="text-gold"/> {v.luggage} {tStrings.sliderLuggage} </span>
                 </div>
                 <div className="mt-6">
                   {v.contact_for_price ? (
-                    <button onClick={(e) => executeAction(e, () => window.open(`https://wa.me/905322855572?text=Merhaba, ${v.name} aracı için bilgi ve fiyat almak istiyorum.`, "_blank"))} className="w-full bg-[#25D366] hover:bg-green-600 text-white font-black px-6 py-4 rounded-xl uppercase text-[10px] md:text-[11px] tracking-widest transition-all shadow-md flex justify-center items-center gap-2">FİYAT AL!</button>
+                    <button onClick={(e) => executeAction(e, () => window.open(`https://wa.me/905322855572?text=${tStrings.waMsg1}${v.name}${tStrings.waMsgInfo}`, "_blank"))} className="w-full bg-[#25D366] hover:bg-green-600 text-white font-black px-6 py-4 rounded-xl uppercase text-[10px] md:text-[11px] tracking-widest transition-all shadow-md flex justify-center items-center gap-2">{tStrings.getQuote}</button>
                   ) : (
                     <div onClick={(e) => executeAction(e, () => router.push("/rezervasyon-yap"))} className="flex items-center justify-between cursor-pointer">
-                      <div className="text-left"><span className="text-[10px] text-luxury-gray/60 block font-bold uppercase">Başlayan Fiyatlar</span><span className="text-2xl font-black text-luxury-dark">{minPrice ? `€${minPrice}` : "---"}</span></div>
+                      <div className="text-left"><span className="text-[10px] text-luxury-gray/60 block font-bold uppercase">{tStrings.startingFrom}</span><span className="text-2xl font-black text-luxury-dark">{minPrice ? `€${minPrice}` : "---"}</span></div>
                       <div className="w-12 h-12 bg-cream-dark text-gold rounded-full flex items-center justify-center group-hover:bg-gold group-hover:text-white transition-all duration-300 shadow-sm pointer-events-none"><ChevronRight size={24} /></div>
                     </div>
                   )}

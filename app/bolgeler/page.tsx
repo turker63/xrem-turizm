@@ -16,6 +16,15 @@ export default function AntalyaRegions() {
   const [regions, setRegions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const tStrings = {
+    guide: lang === 'en' ? "VIP Transfer Guide" : "VIP Transfer Rehberi",
+    title1: lang === 'en' ? "TRANSFER" : "TRANSFER",
+    title2: lang === 'en' ? "REGIONS" : "BÖLGELERİ",
+    loadingMsg: lang === 'en' ? "Loading Regions..." : "Bölgeler Hazırlanıyor...",
+    startingFrom: lang === 'en' ? "starting from" : "'dan itibaren",
+    bookBtn: lang === 'en' ? "BOOK NOW" : "REZERVE ET"
+  };
+
   useEffect(() => {
     const fetchRegions = async () => {
       const { data, error } = await supabase
@@ -32,30 +41,24 @@ export default function AntalyaRegions() {
     fetchRegions();
   }, []);
 
-  // 🏎️ REZERVASYON BAŞLATMA MOTORU
   const handleStartBooking = (region: any) => {
     const transferSummary = {
       pickup: "Antalya Havalimanı (AYT)",
       dropoff: region.name,
       dist: region.dist,
-      // Admin panelinden gelen tüm fiyatları pakete ekliyoruz
       prices: {
         standard: region.price,
         ultra: region.price_ultra_vip,
         minivan: region.price_minivan,
         minibus: region.price_minibus
       },
-      // İlk etapta ekranda görünecek baz fiyat
       basePrice: region.price, 
       totalPrice: `€${region.price}`, 
       date: "", 
       time: ""  
     };
 
-    // Bilgileri saniyeler içinde tarayıcı hafızasına mühürle
     localStorage.setItem("transferSummary", JSON.stringify(transferSummary));
-    
-    // Araç seçimi sayfasına yönlendir
     router.push("/arac-secimi"); 
   };
 
@@ -64,11 +67,7 @@ export default function AntalyaRegions() {
       <Navbar />
 
       <div className="fixed inset-0 z-0">
-        <img 
-          src="/bolgeler-bg.jpg" 
-          alt="Background" 
-          className="w-full h-full object-cover"
-        />
+        <img src="/bolgeler-bg.jpg" alt="Background" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-cream/85 via-cream/80 to-cream/85 backdrop-blur-[1px]" />
       </div>
 
@@ -82,9 +81,9 @@ export default function AntalyaRegions() {
             <div className="w-16 h-16 bg-white/60 border border-white rounded-[2rem] flex items-center justify-center text-gold mx-auto mb-6 shadow-lg">
               <Star size={32} />
             </div>
-            <span className="text-[10px] font-black text-gold tracking-[0.5em] uppercase mb-4 block italic">VIP Transfer Rehberi</span>
+            <span className="text-[10px] font-black text-gold tracking-[0.5em] uppercase mb-4 block italic">{tStrings.guide}</span>
             <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-[#1a1a1a] mb-6 italic">
-              TRANSFER <span className="text-gold">BÖLGELERİ</span>
+              {tStrings.title1} <span className="text-gold">{tStrings.title2}</span>
             </h1>
             <div className="h-1.5 w-24 bg-gold mx-auto rounded-full shadow-lg" />
           </motion.div>
@@ -92,7 +91,7 @@ export default function AntalyaRegions() {
           {loading ? (
             <div className="flex flex-col items-center justify-center py-40 gap-4">
               <div className="w-12 h-12 border-4 border-cream-dark border-t-gold rounded-full animate-spin shadow-xl"></div>
-              <span className="text-gold font-black uppercase tracking-[0.4em] text-[10px]">Bölgeler Hazırlanıyor...</span>
+              <span className="text-gold font-black uppercase tracking-[0.4em] text-[10px]">{tStrings.loadingMsg}</span>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -126,7 +125,7 @@ export default function AntalyaRegions() {
                       <div className="flex justify-center items-baseline gap-1">
                         <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest opacity-60">€</span>
                         <span className="text-3xl font-black text-[#1a1a1a] tracking-tighter">{region.price}</span>
-                        <span className="text-[9px] font-black text-gold uppercase tracking-tighter ml-1">'dan itibaren</span>
+                        <span className="text-[9px] font-black text-gold uppercase tracking-tighter ml-1">{tStrings.startingFrom}</span>
                       </div>
                     </div>
                     
@@ -135,7 +134,7 @@ export default function AntalyaRegions() {
                       className="w-full bg-[#1a1a1a] hover:bg-gold text-white px-6 py-5 rounded-[1.5rem] text-[11px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 shadow-xl group/btn transition-all duration-500"
                     >
                       <span className="relative z-10 flex items-center gap-2">
-                        {lang === 'tr' ? 'REZERVE ET' : 'BOOK NOW'} <ArrowRight size={16} />
+                        {tStrings.bookBtn} <ArrowRight size={16} />
                       </span>
                     </button>
                   </div>

@@ -43,6 +43,9 @@ export default function HeroSearchForm({ defaultDropoff = "" }: { defaultDropoff
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
+  // Dil ayarına göre tarih formatını belirle
+  const localeDateString = lang === 'tr' ? 'tr-TR' : 'en-US';
+
   useEffect(() => {
     const fetchAllData = async () => {
       const { data } = await supabase.from("regions").select("name").order("name");
@@ -220,7 +223,7 @@ export default function HeroSearchForm({ defaultDropoff = "" }: { defaultDropoff
   const currentReturnDropoffList = returnDropoffValue.length > 0 ? filteredReturnDropoff : allLocations;
 
   return (
-    <div className="w-full max-w-5xl mx-auto relative z-[100] drop-shadow-2xl mt-16" ref={formRef}>
+    <div className="w-full max-w-5xl mx-auto translate-x-16 relative z-[100] drop-shadow-2xl mt-20" ref={formRef}>
       <div className="flex gap-1 mb-0 ml-4 relative z-20">
         <button onClick={() => setIsRoundTrip(false)} className={`px-6 py-3 rounded-t-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${!isRoundTrip ? 'bg-white text-black shadow-[0_-5px_15px_rgba(0,0,0,0.05)]' : 'bg-white/80 text-gray-500 hover:bg-white'}`}>
           <ArrowRight size={14} className={!isRoundTrip ? 'text-gold' : 'text-gray-400'} /> {t.oneWay}
@@ -234,7 +237,7 @@ export default function HeroSearchForm({ defaultDropoff = "" }: { defaultDropoff
         <div className="flex flex-col gap-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end relative z-20">
             <div className="flex flex-col gap-2 relative">
-              <label className="text-[9px] text-gray-500 font-black uppercase tracking-widest ml-1 flex items-center gap-1.5 italic"><MapPin size={12} className="text-gold" /> {t.pickup} (Gidiş)</label>
+              <label className="text-[9px] text-gray-500 font-black uppercase tracking-widest ml-1 flex items-center gap-1.5 italic"><MapPin size={12} className="text-gold" /> {t.pickup} {t.departureSuffix}</label>
               <div className="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl h-[52px] flex items-center shadow-sm">
                 <input id="hero-pickup-input" value={pickupValue} onFocus={() => { setActiveDropdown('pickup'); setHighlightedIndex(-1); handleInputSearch(pickupValue, "pickup"); }} onChange={(e) => handleInputSearch(e.target.value, "pickup")} onKeyDown={(e) => handleKeyDown(e, "pickup", currentPickupList)} placeholder={t.placeholderPickup} autoComplete="off" className="bg-transparent w-full outline-none text-[12px] font-bold text-gray-900 pr-2" />
                 {pickupValue && <button onClick={() => handleClear('pickup')} className="text-gray-300 hover:text-red-500 shrink-0"><X size={16} /></button>}
@@ -253,7 +256,7 @@ export default function HeroSearchForm({ defaultDropoff = "" }: { defaultDropoff
             </div>
 
             <div className="flex flex-col gap-2 relative">
-              <label className="text-[9px] text-gray-500 font-black uppercase tracking-widest ml-1 flex items-center gap-1.5 italic"><Flag size={12} className="text-gold" /> {t.dropoff} (Gidiş)</label>
+              <label className="text-[9px] text-gray-500 font-black uppercase tracking-widest ml-1 flex items-center gap-1.5 italic"><Flag size={12} className="text-gold" /> {t.dropoff} {t.departureSuffix}</label>
               <div className="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl h-[52px] flex items-center shadow-sm">
                 <input id="hero-dropoff-input" value={dropoffValue} onFocus={() => { setActiveDropdown('dropoff'); setHighlightedIndex(-1); handleInputSearch(dropoffValue, "dropoff"); }} onChange={(e) => handleInputSearch(e.target.value, "dropoff")} onKeyDown={(e) => handleKeyDown(e, "dropoff", currentDropoffList)} placeholder={t.placeholderDropoff} autoComplete="off" className="bg-transparent w-full outline-none text-[12px] font-bold text-gray-900 pr-2" />
                 {dropoffValue && <button onClick={() => handleClear('dropoff')} className="text-gray-300 hover:text-red-500 shrink-0"><X size={16} /></button>}
@@ -275,12 +278,12 @@ export default function HeroSearchForm({ defaultDropoff = "" }: { defaultDropoff
               <div className="flex flex-col gap-2 relative">
                 <label className="text-[9px] text-gray-500 font-black uppercase tracking-widest ml-1 flex items-center gap-1.5 italic"><CalendarIcon size={12} className="text-gold" /> {t.date}</label>
                 <div onClick={() => setActiveDropdown('date')} className={`w-full h-[52px] bg-gray-50 border p-3 rounded-xl flex items-center justify-between cursor-pointer shadow-sm ${activeDropdown === 'date' ? 'border-gold bg-white' : 'border-gray-200'}`}>
-                  <span className={`text-[12px] font-bold ${selectedDate ? 'text-gray-900' : 'text-gray-400'}`}>{selectedDate ? selectedDate.toLocaleDateString('tr-TR') : "Seçiniz"}</span>
+                  <span className={`text-[12px] font-bold ${selectedDate ? 'text-gray-900' : 'text-gray-400'}`}>{selectedDate ? selectedDate.toLocaleDateString(localeDateString) : t.select}</span>
                 </div>
                 <AnimatePresence>{activeDropdown === 'date' && renderCalendar('date')}</AnimatePresence>
               </div>
               <div className="flex flex-col gap-2 relative">
-                <label className="text-[9px] text-gray-500 font-black uppercase tracking-widest ml-1 flex items-center gap-1.5 italic"><Clock size={12} className="text-gold" /> {t.time}</label>
+                <label className="text-[9px] text-gray-500 font-black uppercase tracking-widest ml-1 flex items-center gap-1.5 italic"><Clock size={12} className="text-gold" /> {t.timeLabel || t.time}</label>
                 <div onClick={() => setActiveDropdown('time')} className={`w-full h-[52px] bg-gray-50 border p-3 rounded-xl flex items-center justify-between cursor-pointer shadow-sm ${activeDropdown === 'time' ? 'border-gold bg-white' : 'border-gray-200'}`}>
                   <span className={`text-[12px] font-bold ${selectedTime ? 'text-gray-900' : 'text-gray-400'}`}>{selectedTime || "00:00"}</span>
                 </div>
@@ -289,7 +292,7 @@ export default function HeroSearchForm({ defaultDropoff = "" }: { defaultDropoff
             </div>
 
             <div className="flex flex-col gap-2 relative">
-              <label className="text-[9px] text-gray-500 font-black uppercase tracking-widest ml-1 flex items-center gap-1.5 italic"><Users size={12} className="text-gold" /> {t.passengers} (Gidiş)</label>
+              <label className="text-[9px] text-gray-500 font-black uppercase tracking-widest ml-1 flex items-center gap-1.5 italic"><Users size={12} className="text-gold" /> {t.passengers} {t.departureSuffix}</label>
               <div onClick={() => setActiveDropdown('pax')} className={`w-full bg-gray-50 border p-3 rounded-xl text-[12px] font-bold cursor-pointer transition-all flex justify-between items-center h-[52px] shadow-sm ${activeDropdown === 'pax' ? 'border-gold bg-white' : 'border-gray-200'}`}>
                 <span className="text-gray-900">{adults} {t.adult} {children > 0 ? `, ${children} ${t.child}` : ""}</span>
                 <span className="text-gold opacity-80 text-[10px]">▼</span>
@@ -320,9 +323,9 @@ export default function HeroSearchForm({ defaultDropoff = "" }: { defaultDropoff
           <AnimatePresence>{isRoundTrip && (
             <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end pt-4 border-t border-gray-100 relative z-10">
               <div className="flex flex-col gap-2 relative">
-                <label className="text-[9px] text-gold font-black uppercase tracking-widest ml-1 flex items-center gap-1.5 italic"><MapPin size={12} className="text-gold" /> {t.pickup} (Dönüş)</label>
+                <label className="text-[9px] text-gold font-black uppercase tracking-widest ml-1 flex items-center gap-1.5 italic"><MapPin size={12} className="text-gold" /> {t.pickup} {t.returnSuffix}</label>
                 <div className="w-full bg-gold/5 border border-gold/30 p-3 rounded-xl h-[52px] flex items-center shadow-sm">
-                  <input id="hero-return-pickup-input" value={returnPickupValue} onFocus={() => { setActiveDropdown('returnPickup'); setHighlightedIndex(-1); handleInputSearch(returnPickupValue, "returnPickup"); }} onChange={(e) => handleInputSearch(e.target.value, "returnPickup")} onKeyDown={(e) => handleKeyDown(e, "returnPickup", currentReturnPickupList)} placeholder="Dönüş Alış" autoComplete="off" className="bg-transparent w-full outline-none text-[12px] font-bold text-gray-900 pr-2" />
+                  <input id="hero-return-pickup-input" value={returnPickupValue} onFocus={() => { setActiveDropdown('returnPickup'); setHighlightedIndex(-1); handleInputSearch(returnPickupValue, "returnPickup"); }} onChange={(e) => handleInputSearch(e.target.value, "returnPickup")} onKeyDown={(e) => handleKeyDown(e, "returnPickup", currentReturnPickupList)} placeholder={t.returnPickupPlaceholder} autoComplete="off" className="bg-transparent w-full outline-none text-[12px] font-bold text-gray-900 pr-2" />
                   {returnPickupValue && <button onClick={() => handleClear('returnPickup')} className="text-gray-300 hover:text-red-500 shrink-0"><X size={16} /></button>}
                 </div>
                 <AnimatePresence>{activeDropdown === 'returnPickup' && (
@@ -342,9 +345,9 @@ export default function HeroSearchForm({ defaultDropoff = "" }: { defaultDropoff
               </div>
 
               <div className="flex flex-col gap-2 relative">
-                <label className="text-[9px] text-gold font-black uppercase tracking-widest ml-1 flex items-center gap-1.5 italic"><Flag size={12} className="text-gold" /> {t.dropoff} (Dönüş)</label>
+                <label className="text-[9px] text-gold font-black uppercase tracking-widest ml-1 flex items-center gap-1.5 italic"><Flag size={12} className="text-gold" /> {t.dropoff} {t.returnSuffix}</label>
                 <div className="w-full bg-gold/5 border border-gold/30 p-3 rounded-xl h-[52px] flex items-center shadow-sm">
-                  <input id="hero-return-dropoff-input" value={returnDropoffValue} onFocus={() => { setActiveDropdown('returnDropoff'); setHighlightedIndex(-1); handleInputSearch(returnDropoffValue, "returnDropoff"); }} onChange={(e) => handleInputSearch(e.target.value, "returnDropoff")} onKeyDown={(e) => handleKeyDown(e, "returnDropoff", currentReturnDropoffList)} placeholder="Dönüş Varış" autoComplete="off" className="bg-transparent w-full outline-none text-[12px] font-bold text-gray-900 pr-2" />
+                  <input id="hero-return-dropoff-input" value={returnDropoffValue} onFocus={() => { setActiveDropdown('returnDropoff'); setHighlightedIndex(-1); handleInputSearch(returnDropoffValue, "returnDropoff"); }} onChange={(e) => handleInputSearch(e.target.value, "returnDropoff")} onKeyDown={(e) => handleKeyDown(e, "returnDropoff", currentReturnDropoffList)} placeholder={t.returnDropoffPlaceholder} autoComplete="off" className="bg-transparent w-full outline-none text-[12px] font-bold text-gray-900 pr-2" />
                   {returnDropoffValue && <button onClick={() => handleClear('returnDropoff')} className="text-gray-300 hover:text-red-500 shrink-0"><X size={16} /></button>}
                 </div>
                 <AnimatePresence>{activeDropdown === 'returnDropoff' && (
@@ -365,14 +368,14 @@ export default function HeroSearchForm({ defaultDropoff = "" }: { defaultDropoff
 
               <div className="grid grid-cols-2 gap-2">
                 <div className="flex flex-col gap-2 relative">
-                  <label className="text-[9px] text-gold font-black uppercase tracking-widest ml-1 flex items-center gap-1.5 italic"><CalendarIcon size={12} className="text-gold" /> DÖNÜŞ TARİHİ</label>
+                  <label className="text-[9px] text-gold font-black uppercase tracking-widest ml-1 flex items-center gap-1.5 italic"><CalendarIcon size={12} className="text-gold" /> {t.returnDate}</label>
                   <div onClick={() => setActiveDropdown('returnDate')} className={`w-full h-[52px] bg-gold/5 border p-3 rounded-xl flex items-center justify-between cursor-pointer shadow-sm ${activeDropdown === 'returnDate' ? 'border-gold bg-white' : 'border-gold/30'}`}>
-                    <span className={`text-[12px] font-bold ${returnDate ? 'text-gray-900' : 'text-gray-500'}`}>{returnDate ? returnDate.toLocaleDateString('tr-TR') : "Seçiniz"}</span>
+                    <span className={`text-[12px] font-bold ${returnDate ? 'text-gray-900' : 'text-gray-500'}`}>{returnDate ? returnDate.toLocaleDateString(localeDateString) : t.select}</span>
                   </div>
                   <AnimatePresence>{activeDropdown === 'returnDate' && renderCalendar('returnDate')}</AnimatePresence>
                 </div>
                 <div className="flex flex-col gap-2 relative">
-                  <label className="text-[9px] text-gold font-black uppercase tracking-widest ml-1 flex items-center gap-1.5 italic"><Clock size={12} className="text-gold" /> SAAT</label>
+                  <label className="text-[9px] text-gold font-black uppercase tracking-widest ml-1 flex items-center gap-1.5 italic"><Clock size={12} className="text-gold" /> {t.timeLabel || t.time}</label>
                   <div onClick={() => setActiveDropdown('returnTime')} className={`w-full h-[52px] bg-gold/5 border p-3 rounded-xl flex items-center justify-between cursor-pointer shadow-sm ${activeDropdown === 'returnTime' ? 'border-gold bg-white' : 'border-gold/30'}`}>
                     <span className={`text-[12px] font-bold ${returnTime ? 'text-gray-900' : 'text-gray-500'}`}>{returnTime || "00:00"}</span>
                   </div>
@@ -381,7 +384,7 @@ export default function HeroSearchForm({ defaultDropoff = "" }: { defaultDropoff
               </div>
 
               <div className="flex flex-col gap-2 relative">
-                <label className="text-[9px] text-gold font-black uppercase tracking-widest ml-1 flex items-center gap-1.5 italic"><Users size={12} className="text-gold" /> {t.passengers} (Dönüş)</label>
+                <label className="text-[9px] text-gold font-black uppercase tracking-widest ml-1 flex items-center gap-1.5 italic"><Users size={12} className="text-gold" /> {t.passengers} {t.returnSuffix}</label>
                 <div onClick={() => setActiveDropdown('returnPax')} className={`w-full bg-gold/5 border p-3 rounded-xl text-[12px] font-bold cursor-pointer transition-all flex justify-between items-center h-[52px] shadow-sm ${activeDropdown === 'returnPax' ? 'border-gold bg-white' : 'border-gold/30'}`}>
                   <span className="text-gray-900">{returnAdults} {t.adult} {returnChildren > 0 ? `, ${returnChildren} ${t.child}` : ""}</span>
                   <span className="text-gold opacity-80 text-[10px]">▼</span>
@@ -391,7 +394,7 @@ export default function HeroSearchForm({ defaultDropoff = "" }: { defaultDropoff
                     <div className="flex justify-between items-center text-[10px] font-black uppercase text-gray-700">
                       <span>{t.adult}</span>
                       <div className="flex items-center gap-3">
-                        <button onClick={() => returnAdults > 1 && setReturnAdults(returnAdults-1)} className="w-8 h-8 rounded-full border bg-gray-50 flex items-center justify-center">-</button>
+                        <button onClick={() => returnAdults > 1 && setAdults(returnAdults-1)} className="w-8 h-8 rounded-full border bg-gray-50 flex items-center justify-center">-</button>
                         <span className="w-4 text-center">{returnAdults}</span>
                         <button onClick={() => setReturnAdults(returnAdults+1)} className="w-8 h-8 rounded-full border bg-gray-50 flex items-center justify-center">+</button>
                       </div>

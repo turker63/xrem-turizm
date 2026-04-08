@@ -1,30 +1,30 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useLanguage } from '@/context/LanguageContext';
 import { Star, Quote } from "lucide-react";
 
-const reviews = [
-  { 
-    name: "Ahmet Y.", 
-    type: "İş Seyahati",
-    comment: "Antalya havalimanından otelime kadar kusursuz bir deneyimdi. Şoför tam vaktinde oradaydı, araç tertemiz ve yeniydi.", 
-    rating: 5 
-  },
-  { 
-    name: "Elena S.", 
-    type: "Tatil / Holiday",
-    comment: "The best VIP transfer in Antalya. Very professional driver, luxurious car, and highly punctual. Highly recommended!", 
-    rating: 5 
-  },
-  { 
-    name: "Mehmet K.", 
-    type: "Aile Seyahati",
-    comment: "Bebek koltuğu talebimizi eksiksiz yerine getirdiler. Ailemle çok güvenli, konforlu ve huzurlu bir yolculuk yaptık.", 
-    rating: 5 
-  }
-];
+const reviewsData = {
+  tr: [
+    { name: "Ahmet Y.", type: "İş Seyahati", comment: "Antalya havalimanından otelime kadar kusursuz bir deneyimdi. Şoför tam vaktinde oradaydı, araç tertemiz ve yeniydi.", rating: 5 },
+    { name: "Elena S.", type: "Tatil", comment: "Antalya'daki en iyi VIP transfer. Çok profesyonel şoför, lüks araç ve tam zamanında. Kesinlikle tavsiye ederim!", rating: 5 },
+    { name: "Mehmet K.", type: "Aile Seyahati", comment: "Bebek koltuğu talebimizi eksiksiz yerine getirdiler. Ailemle çok güvenli, konforlu ve huzurlu bir yolculuk yaptık.", rating: 5 }
+  ],
+  en: [
+    { name: "Ahmet Y.", type: "Business Trip", comment: "A flawless experience from Antalya airport to my hotel. The driver was right on time, and the car was spotless and new.", rating: 5 },
+    { name: "Elena S.", type: "Holiday", comment: "The best VIP transfer in Antalya. Very professional driver, luxurious car, and highly punctual. Highly recommended!", rating: 5 },
+    { name: "Mehmet K.", type: "Family Trip", comment: "They fulfilled our baby seat request perfectly. We had a very safe, comfortable, and peaceful journey with my family.", rating: 5 }
+  ]
+};
 
 export default function Testimonials() {
+  const { lang } = useLanguage();
+  const currentReviews = lang === 'en' ? reviewsData.en : reviewsData.tr;
+
+  const title1 = lang === 'en' ? "CUSTOMER" : "MÜŞTERİ";
+  const title2 = lang === 'en' ? "REVIEWS" : "YORUMLARI";
+  const ratingText = lang === 'en' ? "5.0 Excellent Service Rating" : "5.0 Mükemmel Hizmet Puanı";
+
   return (
     <section className="py-20 md:py-32 bg-cream-dark relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 relative z-10">
@@ -36,14 +36,14 @@ export default function Testimonials() {
           className="text-center mb-16 md:mb-24"
         >
           <h3 className="text-2xl md:text-4xl font-black uppercase tracking-tighter text-luxury-dark">
-            MÜŞTERİ <span className="text-gold">YORUMLARI</span>
+            {title1} <span className="text-gold">{title2}</span>
           </h3>
           <div className="flex items-center justify-center gap-2 mt-6">
             {[...Array(5)].map((_, i) => (
               <Star key={i} size={16} fill="currentColor" className="text-gold" />
             ))}
             <span className="text-luxury-gray text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase ml-2">
-              5.0 Mükemmel Hizmet Puanı
+              {ratingText}
             </span>
           </div>
         </motion.div>
@@ -55,7 +55,7 @@ export default function Testimonials() {
           transition={{ staggerChildren: 0.2 }}
           className="grid grid-cols-1 md:grid-cols-3 gap-8"
         >
-          {reviews.map((r, i) => (
+          {currentReviews.map((r, i) => (
             <motion.div 
               key={i} 
               variants={{ hidden: { y: 30, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
