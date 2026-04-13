@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 
@@ -16,6 +15,7 @@ import BookingForm from '../components/BookingForm';
 import ReservationInquiry from '../components/Inquiry';
 import Partners from '../components/Partners'; 
 import Footer from '../components/Footer';
+import TripadvisorWidget from '@/components/TripadvisorWidget';
 
 export default function Home() {
   useEffect(() => {
@@ -35,6 +35,7 @@ export default function Home() {
       <HeroSlider />
 
       <div id="booking" className="relative z-30 max-w-6xl mx-auto px-4 -mt-24 md:-mt-32 mb-16 scroll-mt-32">
+        
         <motion.div 
           initial={{ opacity: 0, y: 30 }} 
           animate={{ opacity: 1, y: 0 }} 
@@ -43,6 +44,22 @@ export default function Home() {
         >
           <HeroSearchForm />
           <ReservationInquiry />
+          <section className="py-16 bg-cream">
+  <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-12">
+    <div className="flex-1 space-y-6">
+      <h2 className="text-3xl md:text-5xl font-black text-luxury-dark uppercase tracking-tighter italic">
+        MÜŞTERİLERİMİZ BİZİM İÇİN <span className="text-gold">NE DİYOR?</span>
+      </h2>
+      <p className="text-luxury-gray font-medium leading-relaxed">
+        Antalya'da 688 ulaşım firması arasında ilk 30'da yer almanın gururunu yaşıyoruz. Bizi tercih eden tüm misafirlerimize teşekkür ederiz.
+      </p>
+    </div>
+    
+    <div className="flex justify-center md:justify-end w-full md:w-auto">
+      <TripadvisorWidget />
+    </div>
+  </div>
+</section>
         </motion.div>
       </div>
 
@@ -66,6 +83,7 @@ export default function Home() {
 
       <Partners />
       <Footer />
+
 
     </main>
   );

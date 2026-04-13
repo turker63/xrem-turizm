@@ -10,10 +10,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import NotificationBell from "./NotificationBell"; 
 import { Search, Menu, X, Rocket, UserPlus, User, LogOut, Settings, ChevronDown } from "lucide-react"; 
 
-// 🌍 11 DİL VE ISO ÜLKE KODLARI (FlagCDN uyumlu)
+
 const ALL_LANGUAGES = [
   { code: 'tr', name: 'Türkçe', iso: 'tr' },
-  { code: 'en', name: 'English', iso: 'gb' }, // İngilizce için UK bayrağı
+  { code: 'en', name: 'English', iso: 'gb' }, 
   { code: 'de', name: 'Deutsch', iso: 'de' },
   { code: 'ru', name: 'Русский', iso: 'ru' },
   { code: 'es', name: 'Español', iso: 'es' },
@@ -22,7 +22,7 @@ const ALL_LANGUAGES = [
   { code: 'el', name: 'Ελληνικά', iso: 'gr' },
   { code: 'bg', name: 'Български', iso: 'bg' },
   { code: 'ka', name: 'ქართული', iso: 'ge' },
-  { code: 'la', name: 'Latine', iso: 'va' }, // Latince için Vatikan (VA)
+  { code: 'la', name: 'Latine', iso: 'va' }, 
 ];
 
 export default function Navbar() {
@@ -144,7 +144,7 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* 🌐 DİL SEÇİCİ (SVG BAYRAKLI) */}
+            
             <div className="relative" ref={langRef}>
               <button 
                 onClick={() => setIsLangOpen(!isLangOpen)} 
@@ -197,7 +197,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* MOBILE MENU */}
+      
       <AnimatePresence>
         {isMobileOpen && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-cream-dark/98 z-[450] lg:hidden flex flex-col p-8 overflow-y-auto pt-24">

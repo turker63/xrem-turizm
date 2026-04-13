@@ -3,6 +3,7 @@ import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { SettingsProvider } from "@/context/SettingsContext"; 
 import ClientWrapper from "./ClientWrapper"; 
+import WelcomePopup from "@/components/WelcomePopup";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <ClientWrapper>
               {children}
             </ClientWrapper>
+            <WelcomePopup />
           </SettingsProvider>
         </LanguageProvider>
       </body>

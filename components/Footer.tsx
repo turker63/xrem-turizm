@@ -24,7 +24,7 @@ const FOOTER_LINKS = {
     kurumsal: [
       { name: "About Us", href: "/hakkimizda" },
       { name: "Bank Accounts", href: "/banka-hesaplari" },
-      { name: "Contact", href: "/#booking" },
+      { name: "Contact", href: "/iletisim" },
     ],
     politikalar: [
       { name: "Passenger Transport Policy", href: "/yolcu-tasima" },
