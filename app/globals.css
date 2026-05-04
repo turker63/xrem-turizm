@@ -1,97 +1,58 @@
 @import "tailwindcss";
 
 @theme {
-  --color-gold: #bf953f;
-  --color-gold-light: #d4af37;
-  --color-cream: #fff9e9;
-  --color-cream-dark: #f2ece0;
-  --color-luxury-dark: #1a1a1a;
-  --color-luxury-gray: #4a4a4a;
+  --color-gold: #BF953F;
+  --color-gold-light: #D4AF37;
+  --color-luxury-dark: #2C2C2C;
 }
 
 :root {
-  --background: #f2ece0;
-  --foreground: #1a1a1a;
-  --card-bg: #ffffff;
-  --border-color: #f2ece0;
+  --background: #FFFFFF;
+  --foreground: #2C2C2C;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  overflow-x: hidden; 
+  background: #FFFFFF;
+  color: #2C2C2C;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-@layer components {
-  .glass {
-    @apply bg-white/80 backdrop-blur-xl border border-white/50 shadow-[0_10px_40px_rgba(191,149,63,0.08)];
-  }
-
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 5px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: var(--background);
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #bf953f;
-    border-radius: 20px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #d4af37;
-  }
+/* TÜM BÖLÜCÜ ÇİZGİLERİ KALDIR */
+hr {
+  display: none;
 }
 
-::-webkit-scrollbar {
-  width: 10px;
+/* Kenarlık olan her şeyi temizle (Formlar hariç) */
+section, div {
+  border-color: transparent !important;
 }
 
-::-webkit-scrollbar-track {
-  background: #f2ece0;
+/* Sadece gerçekten border gereken yerleri (Inputlar vs.) geri aç */
+input, select, textarea, button, .border-needed {
+  border-color: inherit !important;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #cccccc;
+/* Margin Collapse Engelleyici */
+#__next, body > div:first-child {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #D4AF37;
   border-radius: 10px;
-  border: 3px solid #f2ece0;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #bf953f;
-}
-
-@media print {
-  nav, 
-  footer, 
-  .no-print, 
-  button, 
-  .whatsapp-button {
-    display: none !important;
-  }
-
-  body {
-    background: white !important;
-    color: black !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  .text-gold {
-    color: #bf953f !important;
-    -webkit-print-color-adjust: exact;
-  }
-
-  .bg-gold {
-    background-color: #bf953f !important;
-    -webkit-print-color-adjust: exact;
-  }
-
-  @page {
-    margin: 1cm;
-  }
 }

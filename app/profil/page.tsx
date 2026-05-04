@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from '@/context/LanguageContext';
+import { useCurrency } from "@/context/CurrencyContext";
 import { 
   User, Fingerprint, Phone, Mail, KeyRound, Settings2, ShieldCheck, 
   Ticket, MapPin, Flag, Calendar, Clock, Car, ChevronRight, X, Printer, 
@@ -14,6 +15,7 @@ import {
 
 function ProfileContent() {
   const { lang } = useLanguage();
+  const { formatPrice } = useCurrency();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [bookings, setBookings] = useState<any[]>([]);
@@ -206,7 +208,7 @@ function ProfileContent() {
                        </div>
                     </div>
                     <div className="flex items-center gap-6 border-l border-gray-200 pl-6">
-                       <div className="text-right"><span className="text-[9px] font-black text-gray-400 block uppercase">{tStrings.amount}</span><span className="text-2xl font-black text-gold italic">{booking.total_price}</span></div>
+                       <div className="text-right"><span className="text-[9px] font-black text-gray-400 block uppercase">{tStrings.amount}</span><span className="text-2xl font-black text-gold italic">{formatPrice(Number(booking.total_price))}</span></div>
                        <button onClick={() => setSelectedBooking(booking)} className="bg-luxury-dark text-white p-4 rounded-2xl hover:bg-gold hover:text-black transition-all shadow-lg"><ChevronRight size={20} /></button>
                     </div>
                   </div>

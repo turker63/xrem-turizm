@@ -6,34 +6,38 @@ import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from '@/context/LanguageContext';
 
-const slidesData = {
+const slidesData: any = {
   tr: [
-    { id: 1, image: "/hizmetler/havalimani-transfer.jpg", subtitle: "XREM PREMIUM", title: "HAVALİMANI", titleAccent: "VIP TRANSFER", desc: "Havalimanında isme özel VIP karşılama ve otelinize kadar sarsıntısız, güvenli lüks transfer deneyimi.", btnText: "REZERVASYON YAP", btnLink: "/arac-secimi?dep=Antalya Havalimanı (AYT)" },
-    { id: 2, image: "/xrem-aqua.jpg", subtitle: "MAVİLİKLERE AÇILIN", title: "VIP YAT", titleAccent: "KİRALAMA", desc: "Akdeniz'in en güzel koylarında, sadece size ve sevdiklerinize özel, beş yıldızlı otel konforunda unutulmaz bir gün.", btnText: "YATLARIMIZI İNCELE", btnLink: "/hizmetler/vip-yat-kiralama" },
-    { id: 3, image: "/hizmetler/vip-transfer.jpeg", subtitle: "LÜKS VE KONFOR", title: "ÖZEL VIP", titleAccent: "TRANSFER", desc: "Size özel tasarlanmış VIP araçlarımızla dilediğiniz her lokasyona ayrıcalıklı ve konforlu seyahat ayrıcalığı.", btnText: "DETAYLARI İNCELE", btnLink: "/hizmetler/vip-transfer" },
-    { id: 4, image: "/hizmetler/soforlu-arac-kiralama.jpeg", subtitle: "SINIR TANIMAYAN KONFOR", title: "ŞOFÖRLÜ ARAÇ", titleAccent: "TAHSİSİ", desc: "Günlük veya saatlik tahsis edilen şoförlü lüks araçlarla şehir içi ve şehir dışı prestijli ulaşım çözümleri.", btnText: "TEKLİF ALIN", btnLink: "/hizmetler/soforlu-arac-kiralama" },
-    { id: 5, image: "/hizmetler/kongre-fuar-tasimaciligi.jpg", subtitle: "KURUMSAL ÇÖZÜMLER", title: "KONGRE VE FUAR", titleAccent: "TAŞIMACILIĞI", desc: "Kurumsal etkinlikleriniz ve davetleriniz için profesyonel, zamanında ve kusursuz planlanmış ulaşım çözümleri.", btnText: "İLETİŞİME GEÇ", btnLink: "/hizmetler/kongre-fuar-tasimaciligi" },
-    { id: 6, image: "/hizmetler/tur-tasima.jpeg", subtitle: "KEŞFETMEYE HAZIR OLUN", title: "ÖZEL TUR", titleAccent: "TAŞIMACILIĞI", desc: "Bölgenin tarihi ve turistik lokasyonlarına, tamamen size özel hazırlanan rotalarla güvenli ve lüks gezi.", btnText: "ROTALARI İNCELE", btnLink: "/hizmetler/ozel-tur-tasima" }
+    { id: 1, image: "/hizmetler/havalimani-transfer.jpg", subtitle: "XREM PREMIUM", title: "ANTALYA", titleAccent: "HAVALİMANI TRANSFER", desc: "Havalimanında isme özel VIP karşılama ve otelinize kadar lüks transfer deneyimi.", btnText: "ŞİMDİ REZERVASYON YAP", btnLink: "/arac-secimi?dep=Antalya Havalimanı (AYT)" },
+    { id: 2, image: "/xrem-aqua.jpg", subtitle: "MAVİ YOLCULUK", title: "ÖZEL VIP", titleAccent: "YAT KİRALAMA", desc: "Akdeniz'in en güzel koylarında, sadece size özel beş yıldızlı konfor.", btnText: "YATLARI İNCELE", btnLink: "/hizmetler/vip-yat-kiralama" },
+    { id: 3, image: "/hizmetler/vip-transfer.jpeg", subtitle: "LÜKS VE KONFOR", title: "ŞOFÖRLÜ", titleAccent: "VIP TAHSİS", desc: "7/24 hizmetinizde olan profesyonel şoförlü lüks araçlar.", btnText: "TEKLİF ALIN", btnLink: "/hizmetler/soforlu-arac-kiralama" }
   ],
   en: [
-    { id: 1, image: "/hizmetler/havalimani-transfer.jpg", subtitle: "XREM PREMIUM", title: "AIRPORT", titleAccent: "VIP TRANSFER", desc: "Personalized VIP welcome at the airport and a smooth, safe luxury transfer experience to your hotel.", btnText: "BOOK NOW", btnLink: "/arac-secimi?dep=Antalya Havalimanı (AYT)" },
-    { id: 2, image: "/xrem-aqua.jpg", subtitle: "SAIL INTO THE BLUE", title: "VIP YACHT", titleAccent: "CHARTER", desc: "An unforgettable day in the most beautiful bays of the Mediterranean, exclusive to you and your loved ones, with five-star hotel comfort.", btnText: "VIEW YACHTS", btnLink: "/hizmetler/vip-yat-kiralama" },
-    { id: 3, image: "/hizmetler/vip-transfer.jpeg", subtitle: "LUXURY AND COMFORT", title: "PRIVATE VIP", titleAccent: "TRANSFER", desc: "Privileged and comfortable travel to any location you desire with our custom-designed VIP vehicles.", btnText: "VIEW DETAILS", btnLink: "/hizmetler/vip-transfer" },
-    { id: 4, image: "/hizmetler/soforlu-arac-kiralama.jpeg", subtitle: "COMFORT WITHOUT BORDERS", title: "CHAUFFEURED", titleAccent: "CAR RENTAL", desc: "Prestigious urban and intercity transportation solutions with daily or hourly allocated luxury vehicles with drivers.", btnText: "GET A QUOTE", btnLink: "/hizmetler/soforlu-arac-kiralama" },
-    { id: 5, image: "/hizmetler/kongre-fuar-tasimaciligi.jpg", subtitle: "CORPORATE SOLUTIONS", title: "CONGRESS & FAIR", titleAccent: "TRANSPORTATION", desc: "Professional, timely, and flawlessly planned transportation solutions for your corporate events and invitations.", btnText: "CONTACT US", btnLink: "/hizmetler/kongre-fuar-tasimaciligi" },
-    { id: 6, image: "/hizmetler/tur-tasima.jpeg", subtitle: "GET READY TO EXPLORE", title: "PRIVATE TOUR", titleAccent: "TRANSPORTATION", desc: "Safe and luxury trips to the historical and tourist locations of the region with routes prepared exclusively for you.", btnText: "VIEW ROUTES", btnLink: "/hizmetler/ozel-tur-tasima" }
+    { id: 1, image: "/hizmetler/havalimani-transfer.jpg", subtitle: "XREM PREMIUM", title: "ANTALYA", titleAccent: "AIRPORT TRANSFER", desc: "Personalized VIP welcome at the airport and luxury transfer to your hotel.", btnText: "BOOK NOW", btnLink: "/arac-secimi?dep=Antalya Havalimanı (AYT)" },
+    { id: 2, image: "/xrem-aqua.jpg", subtitle: "BLUE CRUISE", title: "PRIVATE VIP", titleAccent: "YACHT CHARTER", desc: "Five-star comfort in the most beautiful bays of the Mediterranean.", btnText: "VIEW YACHTS", btnLink: "/hizmetler/vip-yat-kiralama" },
+    { id: 3, image: "/hizmetler/vip-transfer.jpeg", subtitle: "LUXURY EXPERIENCE", title: "CHAUFFEURED", titleAccent: "VIP DISPOSAL", desc: "Professional chauffeured luxury vehicles at your service 24/7.", btnText: "GET A QUOTE", btnLink: "/hizmetler/soforlu-arac-kiralama" }
+  ],
+  de: [
+    { id: 1, image: "/hizmetler/havalimani-transfer.jpg", subtitle: "XREM PREMIUM", title: "ANTALYA", titleAccent: "FLUGHAFENTRANSFER", desc: "Personalisierter VIP-Empfang am Flughafen und Luxustransfer zu Ihrem Hotel.", btnText: "JETZT BUCHEN", btnLink: "/arac-secimi?dep=Antalya Havalimanı (AYT)" },
+    { id: 2, image: "/xrem-aqua.jpg", subtitle: "BLAUE REISE", title: "PRIVATE VIP", titleAccent: "YACHTCHARTER", desc: "Fünf-Sterne-Komfort in den schönsten Buchten des Mittelmeers.", btnText: "YACHTEN ANSEHEN", btnLink: "/hizmetler/vip-yat-kiralama" },
+    { id: 3, image: "/hizmetler/vip-transfer.jpeg", subtitle: "LUXUSERFAHRUNG", title: "VIP-SERVICE", titleAccent: "MIT CHAUFFEUR", desc: "Professionelle Luxusfahrzeuge mit Chauffeur rund um die Uhr für Sie da.", btnText: "ANGEBOT ANFORDERN", btnLink: "/hizmetler/soforlu-arac-kiralama" }
+  ],
+  ru: [
+    { id: 1, image: "/hizmetler/havalimani-transfer.jpg", subtitle: "XREM ПРЕМИУМ", title: "АНТАЛЬЯ", titleAccent: "ТРАНСФЕР ИЗ АЭРОПОРТА", desc: "Персональная VIP-встреча в аэропорту и роскошный трансфер до вашего отеля.", btnText: "ЗАБРОНИРОВАТЬ", btnLink: "/arac-secimi?dep=Antalya Havalimanı (AYT)" },
+    { id: 2, image: "/xrem-aqua.jpg", subtitle: "ГОЛУБОЙ КРУИЗ", title: "ЧАСТНАЯ VIP", titleAccent: "АРЕНДА ЯХТ", desc: "Пятизвездочный комфорт в самых красивых бухтах Средиземного моря.", btnText: "ПОСМОТРЕТЬ ЯХТЫ", btnLink: "/hizmetler/vip-yat-kiralama" },
+    { id: 3, image: "/hizmetler/vip-transfer.jpeg", subtitle: "ЛЮКСОВЫЙ ОПЫТ", title: "VIP УСЛУГИ", titleAccent: "С ШОФЕРОМ", desc: "Профессиональные автомобили представительского класса с водителем 24/7.", btnText: "ПОЛУЧИТЬ ПРЕДЛОЖЕНИЕ", btnLink: "/hizmetler/soforlu-arac-kiralama" }
   ]
 };
 
 export default function HeroSlider() {
   const [current, setCurrent] = useState(0);
   const { lang } = useLanguage();
-  const slides = lang === 'en' ? slidesData.en : slidesData.tr;
+  const slides = slidesData[lang] || slidesData.en;
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
-    }, 7000);
+    }, 8000);
     return () => clearInterval(timer);
   }, [slides.length]);
 
@@ -41,15 +45,14 @@ export default function HeroSlider() {
   const prevSlide = () => setCurrent((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
 
   return (
-    <div className="relative w-full h-[85vh] min-h-[650px] overflow-hidden bg-black flex items-center justify-center">
-      
+    <div className="relative w-full h-screen overflow-hidden bg-black">
       <AnimatePresence mode="popLayout">
         <motion.div
           key={current}
-          initial={{ opacity: 0, scale: 1.05 }}
+          initial={{ opacity: 0, scale: 1.1 }}
           animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1.2, ease: "easeInOut" }}
+          exit={{ opacity: 0, scale: 1.05 }}
+          transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
           className="absolute inset-0 z-0"
         >
           <img
@@ -57,77 +60,58 @@ export default function HeroSlider() {
             alt={slides[current].title}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-cream/90" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent" />
         </motion.div>
       </AnimatePresence>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 flex flex-col justify-center h-full pt-20">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 h-full flex flex-col justify-center pt-24">
         <AnimatePresence mode="wait">
           <motion.div
             key={current}
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="max-w-2xl"
+            exit={{ opacity: 0, y: -40 }}
+            transition={{ duration: 0.8 }}
+            className="max-w-4xl"
           >
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-12 h-1 bg-gold" />
-              <span className="text-[10px] md:text-xs font-black text-gold tracking-[0.5em] uppercase">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="w-16 h-[2px] bg-[#D4AF37]" />
+              <span className="text-[11px] font-black text-[#D4AF37] tracking-[0.6em] uppercase">
                 {slides[current].subtitle}
               </span>
             </div>
             
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white uppercase tracking-tighter italic leading-none mb-6 drop-shadow-2xl">
+            <h1 className="text-6xl md:text-9xl font-light text-white uppercase tracking-tighter leading-[0.85] mb-10">
               {slides[current].title} <br />
-              <span className="text-gold">{slides[current].titleAccent}</span>
+              <span className="font-black text-[#D4AF37] italic">{slides[current].titleAccent}</span>
             </h1>
             
-            <p className="text-sm md:text-base text-gray-200 font-medium uppercase tracking-widest leading-relaxed mb-10 max-w-xl">
+            <p className="text-sm md:text-lg text-white/80 font-medium uppercase tracking-[0.2em] leading-relaxed mb-12 max-w-xl">
               {slides[current].desc}
             </p>
             
             <Link 
               href={slides[current].btnLink}
-              className="inline-flex items-center gap-3 bg-gold hover:bg-white text-luxury-dark px-10 py-5 rounded-full font-black uppercase text-[11px] tracking-[0.2em] transition-all shadow-[0_0_40px_rgba(212,175,55,0.3)] hover:shadow-[0_0_60px_rgba(255,255,255,0.5)] active:scale-95"
+              className="inline-flex items-center gap-5 bg-gradient-to-r from-[#D4AF37] to-[#BF953F] text-black px-12 py-6 rounded-full font-black uppercase text-[12px] tracking-[0.3em] transition-all shadow-[0_20px_50px_rgba(212,175,55,0.3)] hover:scale-105 active:scale-95 group"
             >
-              {slides[current].btnText} <ArrowRight size={18} />
+              {slides[current].btnText} 
+              <ArrowRight size={22} className="group-hover:translate-x-3 transition-transform duration-500" />
             </Link>
           </motion.div>
         </AnimatePresence>
       </div>
 
-      <div className="absolute bottom-32 right-6 md:right-12 z-20 flex gap-4">
-        <button 
-          onClick={prevSlide}
-          className="w-14 h-14 rounded-full border border-white/30 flex items-center justify-center text-white backdrop-blur-md hover:bg-gold hover:border-gold hover:text-black transition-all"
-        >
-          <ChevronLeft size={24} />
+      <div className="absolute bottom-40 right-6 md:right-20 z-20 flex gap-4">
+        <button onClick={prevSlide} className="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center text-white backdrop-blur-xl hover:bg-[#D4AF37] hover:border-[#D4AF37] hover:text-black transition-all duration-500">
+          <ChevronLeft size={32} />
         </button>
-        <button 
-          onClick={nextSlide}
-          className="w-14 h-14 rounded-full border border-white/30 flex items-center justify-center text-white backdrop-blur-md hover:bg-gold hover:border-gold hover:text-black transition-all"
-        >
-          <ChevronRight size={24} />
+        <button onClick={nextSlide} className="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center text-white backdrop-blur-xl hover:bg-[#D4AF37] hover:border-[#D4AF37] hover:text-black transition-all duration-500">
+          <ChevronRight size={32} />
         </button>
       </div>
 
-      <div className="absolute bottom-12 left-6 md:left-auto md:right-12 z-20 flex gap-3 items-center">
-        <span className="text-white font-black text-xs">0{current + 1}</span>
-        <div className="flex gap-2">
-          {slides.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrent(idx)}
-              className={`h-1.5 transition-all duration-500 rounded-full ${
-                current === idx ? "w-8 bg-gold" : "w-3 bg-white/30 hover:bg-white/60"
-              }`}
-            />
-          ))}
-        </div>
-        <span className="text-white/50 font-black text-xs">0{slides.length}</span>
-      </div>
+      <div className="absolute bottom-0 left-0 w-full h-32 bg-white rounded-t-[5rem] md:rounded-t-[10rem] z-[15]" />
     </div>
   );
 }

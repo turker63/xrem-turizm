@@ -17,7 +17,8 @@ export default function Partners() {
   const linkTitle = lang === 'en' ? "Go to Website" : "Web Sitesine Git";
 
   return (
-    <section className="py-16 md:py-24 bg-cream-dark border-t border-cream overflow-hidden relative z-10">
+    // ID ve Scroll-Margin eklendi
+    <section id="partners" className="py-16 md:py-24 bg-cream-dark border-t border-cream overflow-hidden relative z-10 scroll-mt-20">
       <div className="max-w-7xl mx-auto px-4">
         
         <p className="text-center text-[10px] md:text-xs font-black text-luxury-gray/70 uppercase tracking-[0.4em] mb-10 md:mb-14">
@@ -38,12 +39,12 @@ export default function Partners() {
                 target="_blank" 
                 rel="noopener noreferrer"
                 title={`${partner.name} - ${linkTitle}`}
-                className="group relative flex items-center justify-center px-4 py-3 md:px-6 md:py-4 bg-white rounded-3xl border border-white shadow-sm hover:shadow-[0_15px_30px_rgba(191,149,63,0.12)] hover:border-gold/20 hover:-translate-y-1.5 transition-all duration-500 outline-none w-32 h-20 md:w-40 md:h-24 lg:w-48 lg:h-28"
+                className="group relative flex items-center justify-center px-4 py-3 md:px-6 md:py-4 bg-white rounded-3xl border border-white shadow-sm hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] hover:border-[#dbc19f]/50 hover:-translate-y-1.5 transition-all duration-500 outline-none w-32 h-20 md:w-40 md:h-24 lg:w-48 lg:h-28"
               >
                 <img 
                   src={partner.src} 
                   alt={partner.name} 
-                  className="max-h-full max-w-full object-contain grayscale opacity-60 transition-all duration-500 mix-blend-multiply group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110"
+                  className="max-h-full max-w-full object-contain transition-all duration-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_12px_rgba(212,175,55,0.8)]"
                 />
               </a>
             </motion.div>

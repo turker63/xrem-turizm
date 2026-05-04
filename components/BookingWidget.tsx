@@ -45,7 +45,6 @@ export default function BookingWidget() {
       <div className="bg-[#080808]/80 backdrop-blur-3xl border border-white/5 p-2 md:p-4 rounded-[2.5rem] shadow-2xl">
         <div className="flex flex-col lg:flex-row items-center gap-2">
           
-          {/* 📍 NEREDEN */}
           <div className="w-full lg:flex-1 bg-white/5 rounded-[1.8rem] p-4 flex items-center gap-4 group hover:bg-white/10 transition-all border border-transparent focus-within:border-gold/30">
             <MapPin className="text-gold" size={20} />
             <div className="flex flex-col flex-1">
@@ -64,7 +63,6 @@ export default function BookingWidget() {
 
           <div className="hidden lg:block text-white/10 italic"><ArrowRight size={16} /></div>
 
-          {/* 🏁 NEREYE */}
           <div className="w-full lg:flex-1 bg-white/5 rounded-[1.8rem] p-4 flex items-center gap-4 group hover:bg-white/10 transition-all border border-transparent focus-within:border-gold/30">
             <MapPin className="text-red-500" size={20} />
             <div className="flex flex-col flex-1">
@@ -81,7 +79,6 @@ export default function BookingWidget() {
             </div>
           </div>
 
-          {/* 📅 TARİH */}
           <div className="w-full lg:w-48 bg-white/5 rounded-[1.8rem] p-4 flex items-center gap-4 group hover:bg-white/10 transition-all border border-transparent focus-within:border-gold/30">
             <Calendar className="text-gold" size={20} />
             <div className="flex flex-col flex-1">
@@ -94,7 +91,6 @@ export default function BookingWidget() {
             </div>
           </div>
 
-          {/* 🚀 BUTON */}
           <button 
             onClick={handleSearch}
             className="w-full lg:w-auto bg-gold text-black px-10 py-6 rounded-[1.8rem] text-[10px] font-black uppercase italic tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(212,175,55,0.2)]"
@@ -104,7 +100,6 @@ export default function BookingWidget() {
 
         </div>
 
-        {/* Alt Bilgi Rozeti */}
         <div className="mt-4 px-6 flex items-center justify-between text-[7px] font-black text-gray-600 uppercase tracking-[0.3em] italic">
           <div className="flex items-center gap-2">
             <Star size={8} className="text-gold" />

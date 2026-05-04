@@ -6,6 +6,7 @@ import { useSettings } from "@/context/SettingsContext";
 import { useLanguage } from '@/context/LanguageContext';
 import { Instagram, Facebook, MessageCircle, ShieldCheck } from "lucide-react";
 
+
 const FOOTER_LINKS = {
   tr: {
     kurumsal: [
@@ -45,7 +46,7 @@ export default function Footer() {
     : "Antalya'nın tüm bölgelerine VIP araçlarımızla premium seyahat keyfi!";
 
   return (
-    <footer className="bg-cream pt-24 pb-10 px-6 md:px-4 relative z-20 border-t border-cream-dark">
+    <footer className="pt-24 pb-10 px-6 md:px-4 relative z-20 border-t border-white/50 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto">
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20 text-center md:text-left">
@@ -105,8 +106,8 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-cream-dark pt-12 pb-12">
-          <div className="flex flex-wrap items-center justify-center gap-12 opacity-50 hover:opacity-100 transition-opacity duration-700">
+        <div className="border-t border-white/50 pt-12 pb-12">
+          <div className="flex flex-wrap items-center justify-center gap-12">
             <PartnerLogo src="/partners/tursab-dds-11448.png" alt="Tursab" />
             <PartnerLogo src="/partners/d2.jpg" alt="D2 Belgesi" />
             <PartnerLogo src="/partners/comodo_ssl.png" alt="SSL" />
@@ -114,9 +115,9 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-cream-dark pt-10 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-bold text-luxury-gray/50 tracking-[0.2em] uppercase">
+        <div className="border-t border-white/50 pt-10 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-bold text-luxury-gray/50 tracking-[0.2em] uppercase">
           <p>© 2026 {settings?.site_name?.toUpperCase() || "XREM TRANSFER"}. {t.footerRights}</p>
-          <div className="flex items-center gap-3 bg-cream-dark/50 px-6 py-3 rounded-full border border-cream-dark shadow-inner">
+          <div className="flex items-center gap-3 bg-white/50 backdrop-blur-md px-6 py-3 rounded-full border border-white/60 shadow-sm">
             <ShieldCheck size={14} className="text-gold" />
             <span className="text-luxury-gray/80"> {t.securePayment}</span>
           </div>
@@ -133,7 +134,7 @@ function SocialIcon({ href, icon }: { href?: string | null, icon: any }) {
     <motion.a 
       whileHover={{ y: -5, backgroundColor: '#bf953f', color: '#fff', borderColor: '#bf953f' }}
       href={href} target="_blank"
-      className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-luxury-gray border border-cream-dark transition-all shadow-sm"
+      className="w-12 h-12 bg-white/80 backdrop-blur-md rounded-2xl flex items-center justify-center text-luxury-gray border border-white/60 transition-all shadow-sm hover:shadow-lg"
     >
       {icon}
     </motion.a>
@@ -146,7 +147,7 @@ function PartnerLogo({ src, alt }: { src: string, alt: string }) {
       whileHover={{ scale: 1.1 }}
       src={src} 
       alt={alt} 
-      className="h-10 md:h-12 object-contain grayscale hover:grayscale-0 transition-all cursor-pointer mix-blend-multiply"
+      className="h-10 md:h-12 object-contain transition-all duration-500 cursor-pointer hover:drop-shadow-[0_0_15px_rgba(212,175,55,0.8)]"
       onError={(e) => {
         e.currentTarget.style.display = 'none';
       }}

@@ -44,4 +44,11 @@ module.exports = {
     },
   },
   plugins: [],
+  theme: {
+  extend: {
+    backgroundImage: {
+      'luxury-gradient': 'linear-gradient(to bottom, #FAFAFA, #F2EFE9, #E5E0D8)',
+    },
+  },
+},
 }

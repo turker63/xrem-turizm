@@ -6,8 +6,10 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { supabase } from "@/lib/supabase"; 
 import { useLanguage } from '@/context/LanguageContext';
 import { Users, Briefcase, CheckCircle2, ChevronRight, Loader2 } from "lucide-react";
+import { useCurrency } from "@/context/CurrencyContext";
 
 const VehicleList = forwardRef((props: any, ref) => {
+  const { formatPrice } = useCurrency();
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname(); 
@@ -30,7 +32,6 @@ const VehicleList = forwardRef((props: any, ref) => {
 
   const isSelectionPage = pathname === "/arac-secimi";
 
-  // Çeviri Metinleri
   const tStrings = {
     alertMsg: lang === 'en' ? "Please select your Departure and Arrival points completely before proceeding to the booking step." : "Lütfen rezervasyon adımına geçmeden önce Kalkış ve Varış noktalarınızı eksiksiz seçiniz.",
     updating: lang === 'en' ? "Updating Price..." : "Fiyat Güncelleniyor...",
@@ -205,7 +206,7 @@ const VehicleList = forwardRef((props: any, ref) => {
     const savedSummary = localStorage.getItem("transferSummary");
     if (savedSummary) {
       const summary = JSON.parse(savedSummary);
-      const updated = { ...summary, totalPrice: `€${finalPrice}`, vehicle: vehicle.id, selectedCarName: vehicle.name };
+      const updated = { ...summary, totalPrice: finalPrice, vehicle: vehicle.id, selectedCarName: vehicle.name };
       localStorage.setItem("transferSummary", JSON.stringify(updated));
     }
     const currentParams = new URLSearchParams(searchParams.toString());
@@ -249,7 +250,7 @@ const VehicleList = forwardRef((props: any, ref) => {
                 ) : (
                   <>
                     <div className="text-luxury-gray text-[10px] font-bold uppercase mb-1 opacity-60">{isRoundTrip ? tStrings.totalPkg : tStrings.carPrice}</div>
-                    <div className="text-3xl font-black text-luxury-dark mb-4">€{isSyncing ? "---" : (carPrice || "---")}</div>
+                    <div className="text-3xl font-black text-luxury-dark mb-4">{isSyncing ? "---" : (carPrice ? formatPrice(carPrice) : "---")}</div>
                     <button 
                       disabled={isSyncing}
                       onClick={() => handleSelect(v)} 
@@ -294,7 +295,7 @@ const VehicleList = forwardRef((props: any, ref) => {
                     <button onClick={(e) => executeAction(e, () => window.open(`https://wa.me/905322855572?text=${tStrings.waMsg1}${v.name}${tStrings.waMsgInfo}`, "_blank"))} className="w-full bg-[#25D366] hover:bg-green-600 text-white font-black px-6 py-4 rounded-xl uppercase text-[10px] md:text-[11px] tracking-widest transition-all shadow-md flex justify-center items-center gap-2">{tStrings.getQuote}</button>
                   ) : (
                     <div onClick={(e) => executeAction(e, () => router.push("/rezervasyon-yap"))} className="flex items-center justify-between cursor-pointer">
-                      <div className="text-left"><span className="text-[10px] text-luxury-gray/60 block font-bold uppercase">{tStrings.startingFrom}</span><span className="text-2xl font-black text-luxury-dark">{minPrice ? `€${minPrice}` : "---"}</span></div>
+                      <div className="text-left"><span className="text-[10px] text-luxury-gray/60 block font-bold uppercase">{tStrings.startingFrom}</span><span className="text-2xl font-black text-luxury-dark">{minPrice ? formatPrice(minPrice) : "---"}</span></div>
                       <div className="w-12 h-12 bg-cream-dark text-gold rounded-full flex items-center justify-center group-hover:bg-gold group-hover:text-white transition-all duration-300 shadow-sm pointer-events-none"><ChevronRight size={24} /></div>
                     </div>
                   )}

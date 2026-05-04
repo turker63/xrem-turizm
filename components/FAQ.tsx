@@ -33,9 +33,10 @@ export default function FAQ() {
   const currentFaqs = lang === 'en' ? faqsData.en : faqsData.tr;
 
   return (
-    <section className="py-20 md:py-32 bg-cream-dark relative overflow-hidden">
+    <section id="faq" className="py-12 md:py-20 relative overflow-hidden scroll-mt-20 bg-white">
       <div className="max-w-4xl mx-auto px-4 relative z-10">
         
+        {/* BAŞLIK ALANI */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -43,18 +44,19 @@ export default function FAQ() {
           className="text-center mb-16"
         >
           <div className="flex justify-center mb-6">
-            <div className="bg-white p-4 rounded-2xl border border-cream-dark text-gold shadow-sm">
+            <div className="bg-[#FAF7F2] p-4 rounded-2xl border border-[#dbc19f]/30 text-[#dbc19f] shadow-sm">
               <MessageCircleQuestion size={32} strokeWidth={1.5} />
             </div>
           </div>
-          <h3 className="text-2xl md:text-4xl font-black uppercase tracking-tighter text-luxury-dark">
-            {t.faqTitle1} <span className="text-gold">{t.faqTitle2}</span>
+          <h3 className="text-2xl md:text-4xl font-black uppercase tracking-tighter text-[#1A1A1A] italic">
+            {t.faqTitle1} <span className="text-[#dbc19f]">{t.faqTitle2}</span>
           </h3>
-          <p className="text-luxury-gray/70 text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase mt-4">
+          <p className="text-gray-400 text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase mt-4">
             {t.faqSubtitle}
           </p>
         </motion.div>
 
+        {/* FAQ LİSTESİ */}
         <motion.div 
           initial="hidden"
           whileInView="visible"
@@ -69,18 +71,18 @@ export default function FAQ() {
               <motion.div 
                 key={i}
                 variants={{ hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
-                className={`border rounded-2xl transition-all duration-300 overflow-hidden ${
+                className={`border rounded-[2rem] transition-all duration-300 overflow-hidden ${
                   isOpen 
-                    ? "bg-white border-gold shadow-[0_15px_40px_rgba(191,149,63,0.15)]" 
-                    : "bg-cream border-cream-dark hover:border-gold/30 hover:bg-white"
+                    ? "bg-[#FAF7F2] border-[#dbc19f] shadow-md" 
+                    : "bg-white border-gray-100 hover:border-[#dbc19f]/30 hover:bg-[#FAF7F2]/50"
                 }`}
               >
                 <button
                   onClick={() => setActiveIndex(isOpen ? null : i)}
                   className="w-full flex items-center justify-between p-6 md:p-8 text-left focus:outline-none group"
                 >
-                  <span className={`text-sm md:text-base font-black tracking-wide pr-4 transition-colors ${
-                    isOpen ? "text-gold" : "text-luxury-dark group-hover:text-gold"
+                  <span className={`text-sm md:text-base font-bold tracking-tight pr-4 transition-colors ${
+                    isOpen ? "text-[#dbc19f]" : "text-[#1A1A1A] group-hover:text-[#dbc19f]"
                   }`}>
                     {f.q}
                   </span>
@@ -88,7 +90,7 @@ export default function FAQ() {
                     animate={{ rotate: isOpen ? 180 : 0 }}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                     className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center border transition-colors ${
-                      isOpen ? "bg-gold text-white border-gold shadow-md" : "bg-white text-luxury-gray/50 border-cream-dark group-hover:border-gold/30 group-hover:text-gold"
+                      isOpen ? "bg-[#dbc19f] text-white border-[#dbc19f]" : "bg-white text-gray-300 border-gray-200 group-hover:border-[#dbc19f]/30 group-hover:text-[#dbc19f]"
                     }`}
                   >
                     <ChevronDown size={16} strokeWidth={3} />
@@ -103,8 +105,8 @@ export default function FAQ() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.3, ease: "easeInOut" }}
                     >
-                      <div className="px-6 md:px-8 pb-6 md:pb-8 text-[13px] md:text-sm text-luxury-gray font-bold leading-relaxed border-t border-cream-dark/50 pt-5">
-                        <div className="border-l-[3px] border-gold pl-5 py-1">
+                      <div className="px-6 md:px-8 pb-6 md:pb-8 text-[13px] md:text-sm text-gray-600 font-medium leading-relaxed border-t border-[#dbc19f]/10 pt-5">
+                        <div className="border-l-2 border-[#dbc19f] pl-5 py-1">
                           {f.a}
                         </div>
                       </div>

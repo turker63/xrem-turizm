@@ -7,11 +7,13 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import { useLanguage } from "@/context/LanguageContext";
+import { useCurrency } from "@/context/CurrencyContext";
 import { supabase } from "@/lib/supabase";
 import { Navigation, ArrowRight, Star } from "lucide-react";
 
 export default function AntalyaRegions() {
   const { lang } = useLanguage();
+  const { formatPrice } = useCurrency();
   const router = useRouter(); 
   const [regions, setRegions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -53,7 +55,7 @@ export default function AntalyaRegions() {
         minibus: region.price_minibus
       },
       basePrice: region.price, 
-      totalPrice: `€${region.price}`, 
+      totalPrice: region.price, 
       date: "", 
       time: ""  
     };
@@ -123,8 +125,7 @@ export default function AntalyaRegions() {
                         {region.name}
                       </h3>
                       <div className="flex justify-center items-baseline gap-1">
-                        <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest opacity-60">€</span>
-                        <span className="text-3xl font-black text-[#1a1a1a] tracking-tighter">{region.price}</span>
+                        <span className="text-3xl font-black text-[#1a1a1a] tracking-tighter">{formatPrice(region.price)}</span>
                         <span className="text-[9px] font-black text-gold uppercase tracking-tighter ml-1">{tStrings.startingFrom}</span>
                       </div>
                     </div>

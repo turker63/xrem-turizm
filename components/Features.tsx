@@ -26,39 +26,40 @@ export default function Features() {
   const currentFeatures = lang === 'en' ? featuresData.en : featuresData.tr;
 
   return (
-    <section className="py-20 md:py-32 px-4 relative bg-cream-dark">
-      <motion.div 
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ staggerChildren: 0.2 }}
-        className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8"
-      >
-        {currentFeatures.map((f, i) => {
-          const IconComponent = icons[i];
-          return (
-            <motion.div 
-              key={i}
-              variants={{ hidden: { y: 40, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
-              whileHover={{ y: -10 }}
-              className="group relative bg-cream border border-cream-dark p-8 md:p-10 rounded-[2.5rem] flex flex-col items-center text-center transition-all duration-500 hover:shadow-[0_20px_50px_rgba(191,149,63,0.08)] hover:border-gold/30 overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-b from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              
-              <div className="w-20 h-20 mb-6 relative z-10 flex items-center justify-center bg-white rounded-2xl group-hover:bg-gold transition-all duration-500 shadow-sm border border-cream-dark group-hover:border-gold">
-                <IconComponent size={36} strokeWidth={1.5} className="text-gold group-hover:text-white transition-colors duration-500" />
-              </div>
-              
-              <h4 className="text-base md:text-lg font-black text-luxury-dark mb-3 uppercase tracking-widest relative z-10 group-hover:text-gold transition-colors">
-                {f.title}
-              </h4>
-              <p className="text-luxury-gray text-xs md:text-sm font-bold relative z-10 transition-colors leading-relaxed opacity-80 group-hover:opacity-100">
-                {f.desc}
-              </p>
-            </motion.div>
-          );
-        })}
-      </motion.div>
+    <section className="py-8 relative z-10 w-full">
+      <div className="max-w-7xl mx-auto px-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="bg-white border border-gray-200 rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.04)]"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[1px] bg-gray-100">
+            {currentFeatures.map((f, i) => {
+              const IconComponent = icons[i];
+              return (
+                <motion.div 
+                  key={i}
+                  className="group relative bg-white p-8 md:p-12 flex flex-col items-center text-center transition-all duration-500 hover:bg-[#FAF9F5]"
+                >
+                  <div className="absolute top-0 left-0 w-full h-[3px] bg-transparent group-hover:bg-[#D4AF37] transition-colors duration-500" />
+                  
+                  <div className="w-16 h-16 mb-6 relative z-10 flex items-center justify-center bg-gray-50 rounded-full transition-all duration-500 group-hover:bg-white group-hover:shadow-[0_10px_20px_rgba(212,175,55,0.15)]">
+                    <IconComponent size={28} strokeWidth={1.5} className="text-[#2C2C2C] group-hover:text-[#D4AF37] transition-colors duration-500" />
+                  </div>
+                  
+                  <h4 className="text-sm md:text-base font-black text-[#2C2C2C] mb-3 uppercase tracking-widest relative z-10">
+                    {f.title}
+                  </h4>
+                  <p className="text-gray-500 text-xs font-medium relative z-10 leading-relaxed opacity-80 group-hover:opacity-100">
+                    {f.desc}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
+      </div>
     </section>
   );
 }

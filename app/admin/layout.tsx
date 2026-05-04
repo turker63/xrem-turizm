@@ -8,7 +8,7 @@ import { supabase } from "@/lib/supabase";
 import { 
   LayoutDashboard, Calendar, Car, Ticket, Users, 
   Settings, LogOut, Activity, MapPin, Archive, 
-  UserCheck, Shield, ChevronRight, Zap
+  UserCheck, Shield, ChevronRight, Zap, ImageIcon
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -18,7 +18,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // 🛡️ GÜVENLİK KONTROLÜ
   useEffect(() => {
     const checkSecurity = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -46,7 +45,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     router.push('/admin/login'); 
   };
 
-  // 📋 MENÜ YAPISI
   const MENU = [
     { name: "ANASAYFA", icon: <LayoutDashboard size={18} />, href: "/admin" },
     { name: "REZERVASYONLAR", icon: <Calendar size={18} />, href: "/admin/rezervasyonlar" },
@@ -57,16 +55,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: "MÜŞTERİ VERİTABANI", icon: <Users size={18} />, href: "/admin/musteriler" },
     { name: "İŞLEM LOGLARI", icon: <Archive size={18} />, href: "/admin/loglar" }, 
     { name: "SİSTEM YÖNETİCİLERİ", icon: <Shield size={18} />, href: "/admin/yoneticiler" },
+    { name: "POPUP AFİŞ YÖNETİMİ", icon: <ImageIcon size={18} />, href: "/admin/pop-up" },
+    { name: "VİTRİN YÖNETİMİ", icon: <ImageIcon size={18} />, href: "/admin/vitrin" },
+    { name: "GALERİ", icon: <ImageIcon size={18} />, href: "/admin/galeri" },
   ];
 
-  // ⏳ YÜKLENİYOR EKRANI
   if (isLoading) return (
     <div className="h-screen bg-[#020202] flex items-center justify-center font-black text-gold italic uppercase tracking-[0.5em] animate-pulse">
       SİSTEME BAĞLANILIYOR...
     </div>
   );
 
-  // 🔐 LOGİN SAYFASINDA İSE LAYOUT'U GİZLE
   if (pathname === '/admin/login') {
     return <>{children}</>;
   }
@@ -76,10 +75,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen bg-[#020202] text-white flex font-sans selection:bg-gold/30 overflow-hidden">
       
-      {/* 📟 SABİT YAN MENÜ (SIDEBAR) */}
       <aside className="w-[280px] border-r border-white/5 bg-[#050505] flex flex-col fixed h-full z-[600] shadow-[10px_0_30px_rgba(0,0,0,0.5)]">
         
-        {/* LOGO ALANI */}
         <div className="p-8 border-b border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex items-center gap-4">
             <div className="w-10 h-10 bg-gold rounded-xl flex items-center justify-center text-black font-black italic shadow-[0_0_20px_rgba(212,175,55,0.3)]">
@@ -92,7 +89,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </motion.div>
         </div>
 
-        {/* MENÜ LİNKLERİ */}
         <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto custom-scrollbar">
           {MENU.map((item) => {
             const isActive = pathname === item.href;
@@ -105,7 +101,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <span className={`${isActive ? "text-gold" : "group-hover:text-white"} transition-colors`}>{item.icon}</span>
                     <span className="text-[9px] font-black uppercase italic tracking-[0.1em]">{item.name}</span>
                   </div>
-                  {/* Aktif ok işareti */}
                   {isActive && <ChevronRight size={14} className="text-gold" />}
                 </div>
               </Link>
@@ -113,7 +108,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
 
-        {/* ALT AYARLAR & ÇIKIŞ */}
         <div className="p-4 border-t border-white/5 bg-[#050505] space-y-2">
            <Link href="/admin/ayarlar">
              <div className={`flex items-center gap-3 p-3.5 rounded-xl text-[9px] font-black uppercase italic tracking-widest transition-all cursor-pointer ${
@@ -132,10 +126,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       </aside>
 
-      {/* 🚀 ANA İÇERİK ALANI (DİNAMİK SAĞ TARAF) */}
       <main className="flex-1 ml-[280px] min-h-screen relative flex flex-col h-screen">
         
-        {/* ÜST DURUM ÇUBUĞU (TOP BAR) */}
         <header className="h-20 border-b border-white/5 bg-[#050505]/90 backdrop-blur-xl z-[500] px-10 flex items-center justify-between shrink-0">
            
            <div className="flex items-center gap-3 text-[9px] font-black uppercase italic text-gray-600 tracking-[0.3em] bg-white/[0.02] px-4 py-2 rounded-full border border-white/5">
@@ -154,12 +146,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
            </div>
         </header>
 
-        {/* SAYFA İÇERİĞİ (SCROLL EDİLEBİLİR ALAN) */}
         <div className="flex-1 overflow-y-auto p-10 relative custom-scrollbar">
-          {/* Ortam Işığı Efekti (Hafif Gold Parlama) */}
           <div className="fixed top-20 right-0 w-[600px] h-[600px] bg-gold/5 rounded-full blur-[150px] pointer-events-none z-0" />
           
-          {/* Gerçek İçerik */}
           <div className="relative z-10 max-w-[1600px] mx-auto">
             {children}
           </div>

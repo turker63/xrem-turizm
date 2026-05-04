@@ -3,29 +3,49 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import { supabase } from "@/lib/supabase";
 
 export default function WelcomePopup() {
   const [isOpen, setIsOpen] = useState(false);
+  const [config, setConfig] = useState<{ image_url: string, target_link: string } | null>(null);
 
   useEffect(() => {
-    if (window.location.search.includes('ref=banner')) {
-      sessionStorage.setItem('hasSeenWelcomePopup', 'true');
-      return;
-    }
+    const fetchPopupConfig = async () => {
+      const { data, error } = await supabase
+        .from('popups')
+        .select('image_url, target_link')
+        .eq('is_active', true)
+        .single();
 
-    const hasSeenPopup = sessionStorage.getItem('hasSeenWelcomePopup');
-    
-    if (!hasSeenPopup) {
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-        sessionStorage.setItem('hasSeenWelcomePopup', 'true');
-      }, 1500);
+      if (!error && data) {
+        setConfig(data);
+        
+        if (window.location.search.includes('ref=banner')) {
+          sessionStorage.setItem('hasSeenWelcomePopup', 'true');
+          return;
+        }
 
-      return () => clearTimeout(timer);
-    }
+        const hasSeenPopup = sessionStorage.getItem('hasSeenWelcomePopup');
+        
+        if (!hasSeenPopup) {
+          const timer = setTimeout(() => {
+            setIsOpen(true);
+            sessionStorage.setItem('hasSeenWelcomePopup', 'true');
+          }, 1500);
+
+          return () => clearTimeout(timer);
+        }
+      }
+    };
+
+    fetchPopupConfig();
   }, []);
 
-  if (!isOpen) return null;
+  if (!isOpen || !config) return null;
+
+  const finalLink = config.target_link.includes('?') 
+    ? `${config.target_link}&ref=banner` 
+    : `${config.target_link}?ref=banner`;
 
   return (
     <AnimatePresence>
@@ -57,14 +77,14 @@ export default function WelcomePopup() {
             </button>
 
             <a 
-              href="/hizmetler/vip-yat-kiralama?ref=banner"
+              href={finalLink}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setIsOpen(false)}
               className="block w-full h-full"
             >
               <img
-                src="/giris-pankart.jpg" 
+                src={config.image_url} 
                 alt="VIP Transfer Kampanya"
                 className="w-full h-full object-cover block"
               />

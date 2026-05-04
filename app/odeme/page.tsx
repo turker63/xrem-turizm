@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useLanguage } from '@/context/LanguageContext';
+import { useCurrency } from "@/context/CurrencyContext";
 import { 
   ShieldCheck, CreditCard, Lock, CheckCircle2, 
   ArrowLeft, Landmark, Car, MapPin, Calendar
@@ -17,6 +18,7 @@ function PaymentContent() {
   const router = useRouter();
   const pnr = searchParams.get("pnr");
   const { lang } = useLanguage();
+  const { formatPrice } = useCurrency();
 
   const [booking, setBooking] = useState<any>(null);
   const [user, setUser] = useState<any>(null);
@@ -43,10 +45,10 @@ function PaymentContent() {
     btnError: lang === 'en' ? "TRY AGAIN" : "TEKRAR DENE",
     orderDetail: lang === 'en' ? "Order Details" : "Sipariş Detayı",
     pax: lang === 'en' ? "TRANSFER PASSENGER" : "TRANSFER YOLCUSU",
-    depRoute: lang === 'en' ? "DEPARTURE ROUTE" : "GİDİŞ ROTALAMASI",
-    retRoute: lang === 'en' ? "RETURN ROUTE" : "DÖNÜŞ ROTALAMASI",
+    depRoute: lang === 'en' ? "FROM" : "NEREDEN",
+    retRoute: lang === 'en' ? "TO" : "NEREYE",
     vipCar: lang === 'en' ? "VIP VEHICLE" : "VIP ARAÇ",
-    total: lang === 'en' ? "TOTAL AMOUNT" : "TOPLAM TUTAR",
+    total: lang === 'en' ? "TOTAL AMOUNT" : "ÖDENECEK TUTAR",
     errorMsg: lang === 'en' ? "An error occurred during payment." : "Ödeme işlemi sırasında bir hata oluştu."
   };
 
@@ -85,33 +87,16 @@ function PaymentContent() {
     setErrorMessage("");
 
     try {
-      const { data: existing } = await supabase
-        .from('bookings')
-        .select('pnr')
-        .eq('pnr', pnr)
-        .maybeSingle();
-
-      if (existing) {
-        setPaymentStatus("success");
-        setTimeout(() => router.push(`/onay?pnr=${pnr}`), 1000);
-        return;
-      }
-
+   
       const { error: sbError } = await supabase
-        .from('bookings')
-        .insert([{
-          pnr: String(booking.pnr || pnr || ""),
-          user_email: String(user?.email || booking.email || "misafir@xrem.com"),
-          pickup: String(booking.pickup || ""),
-          dropoff: String(booking.dropoff || ""),
-          transfer_date: String(booking.date || booking.transfer_date || ""),
-          transfer_time: String(booking.time || booking.transfer_time || ""),
-          vehicle: String(booking.vehicle || booking.vehicle_model || ""),
-          total_price: String(booking.totalPrice || ""),
-          status: "ONAYLANDI"
-        }]);
+        .from('reservations')
+        .update({ status: "ÖDENDİ / ONAYLANDI" })
+        .eq('pnr_code', pnr);
 
-      if (sbError) throw sbError;
+      
+      if (sbError) {
+        console.warn("Sipariş durumu güncellenirken uyarı:", sbError.message);
+      }
 
       setPaymentStatus("success");
       setTimeout(() => {
@@ -133,8 +118,15 @@ function PaymentContent() {
     </div>
   );
 
+  const notesString = booking.notes || "";
+  const notesParts = notesString.split("| Ekstralar:");
+  const customNotes = notesParts[0]?.trim();
+  const extrasString = notesParts[1]?.trim();
+
+  const rawPrice = booking.total_price ? Number(booking.total_price) : (booking.totalPrice ? Number(booking.totalPrice) : 0);
+
   return (
-    <div className="max-w-6xl mx-auto px-4 pt-32 pb-20 relative z-10">
+    <div className="max-w-7xl mx-auto px-4 pt-32 pb-20 relative z-10">
       
       <div className="flex flex-col items-center justify-center text-center mb-16">
         <motion.div 
@@ -196,14 +188,14 @@ function PaymentContent() {
             <button 
               disabled={loading || paymentStatus === "success"} 
               type="submit" 
-              className={`w-full font-black py-6 rounded-[2rem] transition-all uppercase text-[12px] tracking-[0.3em] shadow-2xl active:scale-[0.98] flex items-center justify-center gap-3 relative overflow-hidden group/btn ${
+              className={`w-full font-black py-6 rounded-[2rem] transition-all uppercase text-[12px] tracking-[0.3em] shadow-xl active:scale-[0.98] flex items-center justify-center gap-3 relative overflow-hidden group/btn ${
                 paymentStatus === "error" ? "bg-red-600 text-white" : 
-                paymentStatus === "success" ? "bg-emerald-600 text-white" : 
-                "bg-luxury-black hover:bg-gold text-white"
+                paymentStatus === "success" ? "bg-emerald-500 text-white" : 
+                "bg-emerald-600 hover:bg-emerald-700 text-white border border-emerald-500"
               }`}
             >
               <span className="relative z-10 flex items-center gap-3">
-                {paymentStatus === "idle" && <><Lock size={18} /> {tStrings.btnConfirm} ({booking.totalPrice})</>} 
+                {paymentStatus === "idle" && <><Lock size={18} /> {tStrings.btnConfirm} ({formatPrice(rawPrice)})</>} 
                 {paymentStatus === "processing" && <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> {tStrings.btnProcessing}</>} 
                 {paymentStatus === "success" && <><CheckCircle2 size={20} /> {tStrings.btnSuccess}</>}
                 {paymentStatus === "error" && tStrings.btnError}
@@ -217,54 +209,102 @@ function PaymentContent() {
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white/90 backdrop-blur-2xl border border-white p-8 md:p-10 rounded-[3rem] shadow-2xl relative overflow-hidden h-full">
             <div className="absolute -top-20 -right-20 w-48 h-48 bg-gold/10 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="flex justify-between items-center mb-10 border-b border-cream-dark pb-6">
+            <div className="flex justify-between items-center mb-8 border-b border-cream-dark pb-4">
                <h3 className="font-black uppercase tracking-[0.2em] text-sm text-luxury-dark italic">{tStrings.orderDetail}</h3>
             </div>
             
-            <div className="space-y-8 relative z-10">
-              <div className="bg-cream/40 p-5 rounded-2xl border border-cream-dark/50">
-                <span className="text-[9px] font-black text-luxury-gray/60 uppercase tracking-widest block mb-2">{tStrings.pax}</span>
-                <span className="text-base font-black text-luxury-dark tracking-tight uppercase">
-                  {user ? `${user.user_metadata?.first_name || ""} ${user.user_metadata?.last_name || ""}`.trim() : (booking.fullName || booking.full_name)}
-                </span>
+            <div className="space-y-6 relative z-10">
+              
+              <div className="bg-cream/40 p-5 rounded-2xl border border-cream-dark/50 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-[9px] font-black text-luxury-gray uppercase">SEÇİLEN ARAÇ</span>
+                  <span className="text-[11px] font-black text-gold uppercase italic">{booking.vehicle}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[9px] font-black text-luxury-gray uppercase">YOLCU SAYISI</span>
+                  <span className="text-[10px] font-bold text-luxury-dark uppercase">{booking.adults || 1} Yetişkin, {booking.children || 0} Çocuk</span>
+                </div>
               </div>
 
-              <div className="space-y-6 px-1">
-                <div className="relative pl-8 border-l-2 border-gold/30 space-y-6">
+              <div className="space-y-4 px-2">
+                <div className="relative pl-6 border-l-2 border-gold/30 space-y-6">
                   <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-gold border-4 border-white shadow-sm" />
-                  <div>
-                    <span className="text-[9px] font-black text-gold uppercase tracking-widest block mb-1">{tStrings.depRoute}</span>
-                    <span className="text-[13px] font-bold text-luxury-dark uppercase block leading-tight">{booking.pickup} ➔ {booking.dropoff}</span>
-                    <div className="flex items-center gap-2 mt-2 text-[10px] font-black text-luxury-gray bg-white w-fit px-3 py-1 rounded-lg border border-cream-dark">
-                        <Calendar size={12} className="text-gold" /> {booking.date} | {booking.time}
-                    </div>
+                  <div className="space-y-1">
+                    <span className="text-[9px] font-black text-gold uppercase tracking-widest block">{tStrings.depRoute}</span>
+                    <span className="text-[11px] font-bold text-luxury-dark uppercase leading-tight block">
+                      {booking.pickup}
+                    </span>
                   </div>
-                  {booking.isRoundTrip && (
-                    <div className="pt-2">
-                      <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest block mb-1">{tStrings.retRoute}</span>
-                      <span className="text-[13px] font-bold text-luxury-dark uppercase block leading-tight">{booking.returnPickup || booking.dropoff} ➔ {booking.returnDropoff || booking.pickup}</span>
-                      <div className="flex items-center gap-2 mt-2 text-[10px] font-black text-luxury-gray bg-white w-fit px-3 py-1 rounded-lg border border-cream-dark">
-                          <Calendar size={12} className="text-emerald-500" /> {booking.returnDate} | {booking.returnTime}
+                  
+                  <div className="absolute -left-[9px] bottom-0 w-4 h-4 rounded-full bg-luxury-dark border-4 border-white shadow-sm" />
+                  <div className="space-y-1">
+                    <span className="text-[9px] font-black text-luxury-gray/60 uppercase tracking-widest block">{tStrings.retRoute}</span>
+                    <span className="text-[11px] font-bold text-luxury-dark uppercase leading-tight block">
+                      {booking.dropoff}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 text-[10px] font-bold text-luxury-dark bg-cream/30 px-4 py-2 rounded-xl border border-cream-dark/50 w-full mt-4">
+                  <Calendar size={12} className="text-gold" /> {booking.transfer_date || booking.date} | {booking.transfer_time || booking.time}
+                </div>
+              </div>
+
+              {extrasString && extrasString.length > 0 && (
+                <div className="pt-4 space-y-3 border-t border-cream-dark/50">
+                  <span className="text-[9px] font-black text-luxury-gray uppercase tracking-widest">SEÇİLEN EKSTRALAR</span>
+                  <div className="text-[10px] font-bold text-luxury-dark leading-relaxed">
+                    {extrasString.split(",").map((extra: string, idx: number) => (
+                      <div key={idx} className="flex items-center gap-2 mb-1">
+                        <CheckCircle2 size={10} className="text-gold" /> 
+                        <span className="uppercase">{extra.trim()}</span>
                       </div>
-                    </div>
-                  )}
+                    ))}
+                  </div>
                 </div>
+              )}
 
-                <div className="flex items-center gap-4 bg-white p-4 rounded-2xl border border-cream-dark shadow-sm">
-                   <div className="w-10 h-10 bg-cream rounded-xl flex items-center justify-center text-gold"><Car size={20} /></div>
-                   <div>
-                      <span className="text-[9px] font-black text-luxury-gray/50 uppercase tracking-widest block">{tStrings.vipCar}</span>
-                      <span className="text-[11px] font-black text-luxury-dark uppercase italic">{booking.vehicle}</span>
-                   </div>
+              <div className="pt-4 space-y-3 border-t border-cream-dark/50">
+                <span className="text-[9px] font-black text-luxury-gray uppercase tracking-widest">MÜŞTERİ BİLGİLERİ</span>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center text-[10px] font-bold text-luxury-dark">
+                    <span className="text-luxury-gray">Ad Soyad</span>
+                    <span className="text-right truncate max-w-[130px]">{booking.full_name || booking.fullName || "-"}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-[10px] font-bold text-luxury-dark">
+                    <span className="text-luxury-gray">E-Posta</span>
+                    <span className="text-right truncate max-w-[130px]">{booking.user_email || booking.email || "-"}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-[10px] font-bold text-luxury-dark">
+                    <span className="text-luxury-gray">Telefon</span>
+                    <span className="text-right">{booking.phone || "-"}</span>
+                  </div>
                 </div>
               </div>
 
-              <div className="pt-8 border-t border-cream-dark flex flex-col items-end">
-                <span className="text-[10px] font-black text-luxury-gray uppercase tracking-[0.3em] mb-2">{tStrings.total}</span>
-                <span className="text-5xl md:text-6xl font-black text-luxury-dark tracking-tighter italic">
-                  {booking.totalPrice}
-                </span>
+              {customNotes && customNotes.length > 0 && (
+                <div className="pt-4 space-y-3 border-t border-cream-dark/50">
+                  <span className="text-[9px] font-black text-luxury-gray uppercase tracking-widest">ÖZEL NOTLAR</span>
+                  <p className="text-[10px] font-bold text-luxury-dark leading-relaxed italic bg-cream/20 p-3 rounded-xl border border-cream-dark">
+                    "{customNotes}"
+                  </p>
+                </div>
+              )}
+
+              <div className="pt-6 mt-6 border-t border-luxury-dark/5 space-y-4">
+                <div className="flex justify-between items-end">
+                  <div className="flex flex-col">
+                    <span className="text-[9px] font-black text-luxury-gray uppercase tracking-widest">{tStrings.total}</span>
+                    <span className="text-luxury-dark font-black text-xs uppercase italic">TOPLAM</span>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="text-4xl font-black text-luxury-dark tracking-tighter italic">
+                      {formatPrice(rawPrice)}
+                    </span>
+                  </div>
+                </div>
               </div>
+              
             </div>
           </motion.div>
         </div>

@@ -3,112 +3,90 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useLanguage } from '@/context/LanguageContext';
-import { Plane, Clock, Map, Star, ChevronRight, Briefcase, Ship } from "lucide-react";
 
 const servicesData = {
   tr: [
-    { title: "Şoförlü Araç Kiralama", desc: "Günlük veya saatlik tahsis edilen şoförlü lüks araçlarla prestijli ulaşım.", slug: "soforlu-arac-kiralama", image: "/hizmetler/soforlu-arac-kiralama.jpeg" },
-    { title: "Vip Transfer", desc: "Özel tasarlanmış VIP araçlarımızla ayrıcalıklı seyahat deneyimi.", slug: "vip-transfer", image: "/hizmetler/vip-transfer.jpeg" },
-    { title: "Kongre ve Fuar", desc: "Kurumsal etkinlikleriniz için profesyonel ulaşım çözümleri.", slug: "kongre-fuar-tasimaciligi", image: "/hizmetler/kongre-fuar-tasimaciligi.jpg" },
-    { title: "Özel Tur Taşıma", desc: "Tarihi ve turistik lokasyonlara size özel hazırlanan güvenli gezi.", slug: "ozel-tur-tasima", image: "/hizmetler/tur-tasima.jpeg" },
-    { title: "Havalimanı Vip Transfer", desc: "Havalimanında isme özel karşılama ve sarsıntısız lüks transfer.", slug: "antalya-havalimani-vip-transfer", image: "/hizmetler/havalimani-transfer.jpg" },
-    { title: "VIP Yat Kiralama", desc: "VIP özel Yatımız ile premium tatil deneyimi.", slug: "vip-yat-kiralama", image: "/xrem-aqua.jpg" },
+    { title: "Şoförlü Araç", desc: "Günlük veya saatlik tahsis edilen lüks araçlarla prestijli ulaşım.", slug: "soforlu-arac-kiralama", image: "/hizmetler/soforlu-arac-kiralama.jpeg", subText: "ŞEHİRİÇİ & ŞEHİRLERARASI" },
+    { title: "Vip Transfer", desc: "VIP araçlarımızla her lokasyona ayrıcalıklı seyahat deneyimi.", slug: "vip-transfer", image: "/hizmetler/vip-transfer.jpeg", subText: "LÜKS DOKUNUŞ" },
+    { title: "Kongre Taşıma", desc: "Kurumsal etkinlikleriniz için profesyonel ve kusursuz çözümler.", slug: "kongre-fuar-tasimaciligi", image: "/hizmetler/kongre-fuar-tasimaciligi.jpg", subText: "KURUMSAL ÇÖZÜMLER" },
+    { title: "Özel Tur", desc: "Bölgenin turistik lokasyonlarına, size özel rotalarla güvenli gezi.", slug: "ozel-tur-tasima", image: "/hizmetler/tur-tasima.jpeg", subText: "KEŞFE ÇIKIN" },
+    { title: "Havalimanı VIP", desc: "Havalimanında VIP karşılama ve otelinize kadar sarsıntısız transfer.", slug: "antalya-havalimani-vip-transfer", image: "/hizmetler/havalimani-transfer.jpg", subText: "KESİNTİSİZ KONFOR" },
+    { title: "Yat Kiralama", desc: "Özel Yatımız ile premium tatil ve deniz üstünde benzersiz bir deneyim.", slug: "vip-yat-kiralama", image: "/xrem-aqua.jpg", subText: "MAVİ YOLCULUK" },
   ],
   en: [
-    { title: "Chauffeured Car Rental", desc: "Prestigious transportation with luxury vehicles allocated daily or hourly.", slug: "soforlu-arac-kiralama", image: "/hizmetler/soforlu-arac-kiralama.jpeg" },
-    { title: "VIP Transfer", desc: "Privileged travel experience with our custom-designed VIP vehicles.", slug: "vip-transfer", image: "/hizmetler/vip-transfer.jpeg" },
-    { title: "Congress & Fair", desc: "Professional transportation solutions for your corporate events.", slug: "kongre-fuar-tasimaciligi", image: "/hizmetler/kongre-fuar-tasimaciligi.jpg" },
-    { title: "Private Tour Transport", desc: "Safe tours specially prepared for you to historical and tourist locations.", slug: "ozel-tur-tasima", image: "/hizmetler/tur-tasima.jpeg" },
-    { title: "Airport VIP Transfer", desc: "Personalized welcome at the airport and a smooth luxury transfer.", slug: "antalya-havalimani-vip-transfer", image: "/hizmetler/havalimani-transfer.jpg" },
-    { title: "VIP Yacht Charter", desc: "Premium holiday experience with our private VIP Yacht.", slug: "vip-yat-kiralama", image: "/xrem-aqua.jpg" },
+    { title: "Chauffeured Car", desc: "Prestigious transportation with daily or hourly luxury vehicles.", slug: "soforlu-arac-kiralama", image: "/hizmetler/soforlu-arac-kiralama.jpeg", subText: "CITY & INTERCITY" },
+    { title: "VIP Transfer", desc: "Privileged travel experience to any location with our VIP vehicles.", slug: "vip-transfer", image: "/hizmetler/vip-transfer.jpeg", subText: "LUXURY TOUCH" },
+    { title: "Congress Transport", desc: "Professional and flawlessly planned solutions for corporate events.", slug: "kongre-fuar-tasimaciligi", image: "/hizmetler/kongre-fuar-tasimaciligi.jpg", subText: "CORPORATE SOLUTIONS" },
+    { title: "Private Tour", desc: "Safe trips to tourist locations with routes prepared just for you.", slug: "ozel-tur-tasima", image: "/hizmetler/tur-tasima.jpeg", subText: "START EXPLORING" },
+    { title: "Airport VIP", desc: "VIP welcome at the airport and a safe luxury transfer to your hotel.", slug: "antalya-havalimani-vip-transfer", image: "/hizmetler/havalimani-transfer.jpg", subText: "SEAMLESS COMFORT" },
+    { title: "Yacht Charter", desc: "Premium holiday experience and an unparalleled journey on the sea.", slug: "vip-yat-kiralama", image: "/xrem-aqua.jpg", subText: "BLUE VOYAGE" },
   ]
 };
-
-const icons = [
-  <Clock size={18} key="clock" />, 
-  <Star size={18} key="star" />, 
-  <Briefcase size={18} key="briefcase" />, 
-  <Map size={18} key="map" />, 
-  <Plane size={18} key="plane" />, 
-  <Ship size={18} key="ship" />
-];
 
 export default function Services() {
   const { lang } = useLanguage();
   const currentServices = lang === 'en' ? servicesData.en : servicesData.tr;
-
-  const subtitle = lang === 'en' ? 'NO LIMITS IN SERVICE!' : 'HİZMETTE SINIR TANIMIYORUZ!';
-  const mainTitle = lang === 'en' ? 'OUR SERVICES' : 'HİZMETLERİMİZ';
-  const btnText = lang === 'en' ? 'DETAILS' : 'İNCELE';
+  
+  const title1 = lang === 'en' ? "OUR" : "VİP";
+  const title2 = lang === 'en' ? "SERVICES" : "HİZMETLERİMİZ";
+  const detailsBtn = lang === 'en' ? "DISCOVER" : "KEŞFET";
 
   return (
-    <section id="services" className="py-24 relative overflow-hidden bg-cream">
-      <div className="absolute inset-0 z-0">
-        <img 
-          src="/bolgeler-bg.jpg" 
-          alt="Background" 
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-cream/75 via-cream/60 to-cream/75 backdrop-blur-[2px]" />
+    <div className="w-full relative z-10 bg-white">
+      <div className="max-w-7xl mx-auto px-4 text-center mb-8">
+        <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <h2 className="text-2xl md:text-4xl font-black uppercase tracking-tighter text-[#2C2C2C] italic">
+            {title1} <span className="text-[#D4AF37]">{title2}</span>
+          </h2>
+        </motion.div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 text-center relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-12"
-        >
-          <span className="text-[9px] font-black text-gold tracking-[0.4em] uppercase mb-3 block italic">{subtitle}</span>
-          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-[#1a1a1a] italic leading-none mb-5">
-             <span className="text-gold">{mainTitle}</span>
-          </h2>
-          <div className="h-1 w-20 bg-gold mx-auto rounded-full shadow-lg shadow-gold/20" />
-        </motion.div>
-
-        <div className="flex flex-wrap justify-center gap-5">
+      <div className="w-full max-w-[1200px] mx-auto px-4 md:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[1px] bg-gray-100 border border-gray-100 shadow-md">
           {currentServices.map((service, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.05 }}
-              className="w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] max-w-[320px] group bg-white/40 backdrop-blur-xl p-3.5 rounded-[2.2rem] border border-white flex flex-col hover:shadow-[0_15px_40px_rgba(191,149,63,0.12)] hover:border-gold hover:-translate-y-2 transition-all duration-500"
+              transition={{ delay: index * 0.1 }}
+              className="flex flex-col group relative bg-white"
             >
-              <div className="relative w-full h-40 rounded-[1.8rem] overflow-hidden mb-5 bg-cream-dark shadow-lg">
+              {/* RESİM BOYUTLARI CİDDİ ŞEKİLDE KÜÇÜLTÜLDÜ (h-220px) */}
+              <div className="w-full h-[220px] lg:h-[260px] overflow-hidden relative">
                 <img 
                   src={service.image} 
                   alt={service.title} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="absolute top-3 right-3 w-9 h-9 bg-white/90 backdrop-blur-md border border-white rounded-xl flex items-center justify-center text-gold shadow-xl group-hover:bg-gold group-hover:text-white transition-colors duration-500">
-                  {icons[index]}
-                </div>
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
               </div>
               
-              <div className="px-3 pb-4 space-y-3 flex flex-col flex-1 text-center">
-                <h3 className="text-[#1a1a1a] font-black text-base uppercase tracking-tighter italic group-hover:text-gold transition-colors line-clamp-1 leading-tight">
+              {/* İÇ BOŞLUKLAR (PADDING) KISILDI */}
+              <div className="p-5 md:p-6 flex flex-col items-center text-center flex-1 relative z-10">
+                <span className="text-[8px] text-gray-400 font-bold tracking-[0.3em] uppercase mb-2">
+                  {service.subText}
+                </span>
+                
+                <h3 className="text-[#2C2C2C] font-black text-base md:text-lg uppercase tracking-widest mb-2">
                   {service.title}
                 </h3>
-                <p className="text-[#1a1a1a] text-[10px] font-bold leading-relaxed uppercase tracking-wider opacity-60 group-hover:opacity-100 transition-opacity">
+                
+                <p className="text-gray-500 text-[10px] leading-relaxed font-medium mb-5 flex-1 px-2 line-clamp-2">
                   {service.desc}
                 </p>
                 
-                <div className="pt-2 mt-auto flex justify-center">
-                  <Link 
-                    href={`/hizmetler/${service.slug}`}
-                    className="inline-flex items-center gap-2 text-gold font-black text-[8px] tracking-[0.2em] uppercase hover:text-[#1a1a1a] transition-all bg-white/80 px-5 py-2.5 rounded-full border border-white shadow-sm hover:border-gold"
-                  >
-                    {btnText} <ChevronRight size={12} />
-                  </Link>
-                </div>
+                <Link 
+                  href={`/hizmetler/${service.slug}`}
+                  className="border-2 border-[#2C2C2C] text-[#2C2C2C] hover:bg-[#2C2C2C] hover:text-white px-6 py-2.5 text-[9px] font-black tracking-widest uppercase transition-all duration-300 mt-auto"
+                >
+                  {detailsBtn}
+                </Link>
               </div>
             </motion.div>
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }
