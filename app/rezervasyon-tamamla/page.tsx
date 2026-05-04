@@ -624,11 +624,12 @@ function BookingFinalContent() {
                       <input 
                         type="tel" 
                         maxLength={13}
-                        onInput={(e) => {
-                          e.target.value = (e.target as HTMLInputElement).value.replace(/[^0-9]/g, '');
-                        }}
+
                         value={formData.phone} 
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        onChange={(e) => setFormData({
+  ...formData, 
+  phone: e.target.value.replace(/[^0-9]/g, '') 
+})}
                         className="w-full flex-1 bg-cream/20 border border-cream-dark px-4 py-4 rounded-xl outline-none focus:border-gold text-xs font-bold"
                       />
                     </div>
